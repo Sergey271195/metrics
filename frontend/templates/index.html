@@ -1,0 +1,32 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Template project</title>
+    <meta name="description" content="Template project">
+    <meta name="author" content="SAM">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
+
+</head>
+
+<style>
+    /* If you need to add custom font */
+    /* @font-face {
+      font-family: "FuturaPT";
+      src: url("{% static 'FuturaPT-Book.ttf' %}");
+     }
+    body {
+      font-family: "FuturaPT";
+    } */
+</style>
+
+<body>
+
+    <div id = "app">
+        <!-- React goes here -->
+    </div>
+</body>
+<script src = "{% static 'main.js' %}"></script>
+</html>

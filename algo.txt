@@ -1,0 +1,88 @@
+Steps:
+
+1. python -m venv <venv_name>
+    cd <venv_name>/scripts 
+    activate.bat
+
+2. pip install -r requirements.txt
+    //Django (optional django-heroku)
+    //djangorestframework
+    //psycopg2==2.8.6 (For PostgreSQL)
+    //requests
+    //whitenoise
+
+3. django-admin startproject projectbase .
+
+4. django-admin startapp frontend
+
+5. add frontend to projectbase urls
+    //add urls.py to frontend folder
+    //add frontend.urls to settings file (and don't forget to add rest_framework)
+    //add path to frontend.url to projectbase urls
+
+6. add index.html file to frontend/templates (static folder for static stuff)
+
+Implementing React
+
+7. Add src/components folder inside frontend folder
+
+8. npm init -y
+    //initialize npm, create package.json file
+
+9. npm i webpack webpack-cli --save-dev
+    //installing webpack. It is used to bundle necessary modules
+    //it needs configuration file
+
+10. add following scripts to package.json
+    //"dev": "webpack --mode development .frontend/src/index.js --output .frontend/templates/main.js",
+    //"build": "webpack --mode production .frontend/src/index.js --output .frontend/templates/main.js"
+
+11. npm i @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
+    //for code compilation
+
+12. npm install --save-dev css-loader style-loader
+    //to work with css files inside react
+
+13. npm i react react-dom (maybe react-icons)
+
+14. add .babelrc file
+
+15. add webpack.config.js files
+    // Rule for js files
+    {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader"
+          }
+        },
+    // Rule for css files
+    {
+          test: /\.css$/i,
+          exclude: /node_modules/,
+          use: ['style-loader', 'css-loader']
+        },
+
+16. Add script tag according to position of main.js file
+
+    // e.g. <script src = "{ % static 'templates/main.js' %}"></script>
+
+
+17 create index.js file inside src folder 
+    //it is the entry point for webpack
+
+18. Add App.js file to src/components
+
+19. add .gitignore file 
+    //you don't need all those node-modules in you repository
+    //git init
+    //git add .
+    //git commit -m "firstcommit"
+
+20. Go to guithab abd create new repository
+    //git remote add origin
+    //git branch -M main
+    //git push -u origin main
+
+21. to quickly start project 
+    //git clone https://github.com/Sergey271195/django-react-template.git

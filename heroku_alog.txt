@@ -1,0 +1,39 @@
+- Check if you need env variables
+- Create .gitignore file
+- Initialize git (git init)
+- Create gitHub repository:
+	git remote add origin 
+	git push -u origin master
+- pip install django_heroku, gunicorn
+
+- settings.py:
+### import django_heroku
+### bottom:
+	django_heroku.settings(locals())
+
+- Create prokfile 
+	Procfile # web: gunicorn projectbase.wsgi
+
+- Create heroku app, install heroku CLI
+- heroku login 
+- heroku git:remote -a <your app name>
+- heroku buildpacks:set heroku/python
+- heroku buildpacks:add --index 1 heroku/nodejs
+
+- heroku config:set ENV_VARIABLE="VALUE"
+
+- package.json add:
+	### "engines": {
+    		"node": "12.16.3",
+    		"npm": "6.14.4"
+  			}
+	### "scripts" : {
+		"posinstall": "npm run build"
+	}
+
+- heroku run bash
+$~ python manage.py migrate
+
+#Check on you db
+
+Well Done!!
