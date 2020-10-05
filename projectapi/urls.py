@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import templateapiview
+from .views import tokenview
 
 urlpatterns = [
-    path('', templateapiview)
+    path('token/', tokenview)
 ]
