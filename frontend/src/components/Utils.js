@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-
-export const GETFetch = (url, token) => {
+export const GETFetch = (url) => {
 
     const [data, setData] = useState()
     const [loading, setLoading] = useState(true)
@@ -9,28 +8,14 @@ export const GETFetch = (url, token) => {
 
     useEffect(() => {
         if (!url) return;
-        if (!token) {
-            fetch(url)
-                .then(response => response.json())
-                    .then(data => setData(data))
-                        .then(() => setLoading(false))
-                            .catch(error => {
-                                setError(error)
-                    })
-        }
-        else {
-            fetch(url, {
-                method: 'GET',
-                headers: {"Authorization": `OAuth ${token}`}
-            })
-                .then(response => response.json())
-                    .then(data => setData(data))
-                        .then(() => setLoading(false))
-                            .catch(error => {
-                                setError(error)
-                    })
-        }
-        
+        fetch(url)
+            .then(response => response.json())
+                .then(data => setData(data))
+                    .then(() => setLoading(false))
+                        .catch(error => {
+                            setError(error)
+                })
+       
     }, [url])
     
 
@@ -63,5 +48,24 @@ export const GETFetchAuth = (url, token) => {
     
 
     return {loading, data, error}
+}
 
+export const PostFetch = (url, data) => {
+    
+    return(
+        fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json;charset=utf-8'},
+            body: JSON.stringify(data)
+            }).then(response => response.json())
+    )
+}
+
+export const saveToLocalStorage = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data))
+}
+
+export const getFromLocalStorage = (key) => {
+    const data = localStorage.getItem(key)
+    return data ? JSON.parse(data): data 
 }

@@ -4,6 +4,9 @@ import Contoller from './Controller'
 import TokenContextProvider from '../context/TokenContext'
 import WebListContextProvider from '../context/WebListContext';
 import CurrentWebPageContextProvider from '../context/CurrentWebPageContext'
+import EmployeeContextProvider from '../context/EmployeeContext';
+import ProjectsContextProvider from '../context/ProjectsContext'
+import ViewsContextProvider from '../context/ViewsContext';
 
 
 const App = () => {
@@ -11,7 +14,13 @@ const App = () => {
         <TokenContextProvider>
             <WebListContextProvider>
                 <CurrentWebPageContextProvider>
-                    <Contoller />
+                    <EmployeeContextProvider>
+                        <ProjectsContextProvider>
+                            <ViewsContextProvider>
+                                <Contoller />
+                            </ViewsContextProvider>
+                        </ProjectsContextProvider>
+                    </EmployeeContextProvider>
                 </CurrentWebPageContextProvider>
             </WebListContextProvider>
         </TokenContextProvider>
