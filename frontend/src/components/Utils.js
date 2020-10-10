@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 
+export const GAURL = 'https://api-metrika.yandex.net/analytics/v3/data/ga'
+
 export const GETFetch = (url) => {
 
     const [data, setData] = useState()
@@ -50,6 +52,17 @@ export const GETFetchAuth = (url, token) => {
     return {loading, data, error}
 }
 
+export const GETFetchAuthV = (url, token) => {
+
+        if (!url) return;
+        if (!token) return;
+        return fetch(url, {
+            method: 'GET',
+            headers: {"Authorization": `OAuth ${token}`}
+        }).catch(error => console.log(error))
+
+}
+
 export const PostFetch = (url, data) => {
     
     return(
@@ -68,4 +81,8 @@ export const saveToLocalStorage = (key, data) => {
 export const getFromLocalStorage = (key) => {
     const data = localStorage.getItem(key)
     return data ? JSON.parse(data): data 
+}
+
+export const RounderN = (num, n) => {
+    return Math.round(num*Math.pow(10, n))/Math.pow(10, n)
 }

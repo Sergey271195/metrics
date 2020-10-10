@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { EmployeeContext } from '../../context/EmployeeContext'
 import EmployeeListComponent from '../mainviewpackage/EmployeeListComponent'
 import ProjectListComponent from '../projectlistpackage/ProjectListComponent'
+import CreateProjectComponent from '../createprojectpackage/CreateProjectComponent'
 
 const MainView = () => {
 
@@ -24,6 +25,7 @@ const MainView = () => {
                 <div>Проекты</div>
                 <ProjectListComponent type = {{full: false}} />
             </div>
+            {/* <CreateProjectComponent /> */}
         </div>
     )
 }
