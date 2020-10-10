@@ -3,6 +3,7 @@ import { EmployeeContext } from '../../context/EmployeeContext'
 import EmployeeListComponent from '../mainviewpackage/EmployeeListComponent'
 import ProjectListComponent from '../projectlistpackage/ProjectListComponent'
 import CreateProjectComponent from '../createprojectpackage/CreateProjectComponent'
+import CreateEmployeeComponent from '../CreateEmployeeComponent'
 
 const MainView = () => {
 
@@ -19,6 +20,7 @@ const MainView = () => {
         <div style = {{display: 'flex'}}>
             <div>
                 <div>Сотрудники</div>
+                <CreateEmployeeComponent />
                 <EmployeeListComponent />
             </div>
             <div>
@@ -26,6 +28,7 @@ const MainView = () => {
                 <ProjectListComponent type = {{full: false}} />
             </div>
             <CreateProjectComponent />
+            <CreateEmployeeComponent />
         </div>
     )
 }
