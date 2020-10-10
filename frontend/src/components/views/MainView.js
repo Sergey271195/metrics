@@ -28,7 +28,6 @@ const MainView = () => {
                 <ProjectListComponent type = {{full: false}} />
             </div>
             <CreateProjectComponent />
-            <CreateEmployeeComponent />
         </div>
     )
 }
