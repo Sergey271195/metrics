@@ -21,12 +21,10 @@ export const previousMonthSameDate = (date) => {
     if (date.getMonth() === currMonth) {
         date.setDate(0)
     }
-    console.log(date)
     return date
 }
 
 export const startPreviousMonth = (date) => {
     date.setMonth(date.getMonth()-1, 1)
-    console.log(date)
     return date 
 }

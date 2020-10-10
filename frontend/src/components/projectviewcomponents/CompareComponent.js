@@ -3,7 +3,7 @@ import { RounderN } from '../Utils'
 
 const CompareComponent = ({dataFirstPart, dataSecondPart}) => {
 
-    const ORDER_DICTIONARY = ['Перешли на сайт', 'Добавили в корзину', "Заказы", "Общая сумма заказов", "Средний чек"]
+    const ORDER_DICTIONARY = ['Перешли на сайт', 'Добавление в корзину (unique)', "Добавлено в корзину", "Заказы", "Общая сумма заказов", "Средний чек"]
 
     const CountPercents = (num1, num2) => {
         return num1 > num2 ? ('+ '+ String(RounderN((100 - 100*num2/num1), 2))+ '%') 

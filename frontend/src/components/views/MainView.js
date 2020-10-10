@@ -25,7 +25,7 @@ const MainView = () => {
                 <div>Проекты</div>
                 <ProjectListComponent type = {{full: false}} />
             </div>
-            {/* <CreateProjectComponent /> */}
+            <CreateProjectComponent />
         </div>
     )
 }
