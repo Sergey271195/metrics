@@ -31,6 +31,8 @@
 		"posinstall": "npm run build"
 	}
 
+- git push heroku master
+
 - heroku run bash
 $~ python manage.py migrate
 
