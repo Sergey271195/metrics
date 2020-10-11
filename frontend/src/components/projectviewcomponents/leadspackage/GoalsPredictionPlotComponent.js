@@ -1,16 +1,17 @@
 import React, {useEffect, useState, useContext} from 'react'
-import { TokenContext } from '../../context/TokenContext'
-import { ViewsContext } from '../../context/ViewsContext'
-import { GETFetchAuthV } from '../Utils'
-import {previousMonthSameDate, formatDate} from '../Date'
+import { TokenContext } from '../../../context/TokenContext'
+import { ViewsContext } from '../../../context/ViewsContext'
+import { GETFetchAuthV } from '../../Utils'
+import { previousMonthSameDate, formatDate } from '../../Date'
 import Chart from 'chart.js';
-import { DateForPlotsContext } from '../../context/DateForPlotsContext'
-import { clearPlot, formatDatePeriods, aggregateData } from '../PlotUtils'
+import { clearPlot, formatDatePeriods, aggregateData } from '../../PlotUtils'
+import { DateForPlotsContext } from '../../../context/DateForPlotsContext'
 
-const PredictionPlot = ({updatePlot}) => {
+const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
 
     const { views } = useContext(ViewsContext)
     const { token } = useContext(TokenContext)
+
     const {timePeriod: {
         firstPeriod
     }} = useContext(DateForPlotsContext)
@@ -24,33 +25,37 @@ const PredictionPlot = ({updatePlot}) => {
     const [ timePeriods, setTimePeriods ] = useState()
 
     useEffect(() => {
-/* Current period */
+    /* Current period */
+    if (!currentGoal) return
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:ecommerceRevenue
+&metrics=ym:s:goal${currentGoal.id}reaches
 &date1=${firstPeriod.start}
 &date2=${firstPeriod.end}`, token)
         .then(response => response.json())
             .then(data => {
+                console.log(data),
                 setCurrentDataByDays(aggregateData(data.data[0].metrics[0])),
                 setTimePeriods(formatDatePeriods(data.time_intervals))
             })
                 .catch(error => console.log(error))
 
-    }, [updatePlot])
+    }, [currentGoal, updatePlot])
 
     useEffect(() => {
-        /* Previous period */
+    /* Previous period */
+    if (!currentGoal) return
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:ecommerceRevenue
+&metrics=ym:s:goal${currentGoal.id}reaches
 &date1=${formatDate(previousMonthSameDate(new Date(firstPeriod.start)))}
 &date2=${formatDate(previousMonthSameDate(new Date(firstPeriod.end)))}`, token)
         .then(response => response.json())
             .then(data => {
+                console.log(data),
                 setPreviousDataByDays(aggregateData(data.data[0].metrics[0]))
             })
                 .catch(error => console.log(error))
 
-        }, [updatePlot])
+        }, [currentGoal, updatePlot])
 
         useEffect(() => {
             /* Previous year */
@@ -63,22 +68,23 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
             startDate.setDate(1)
 
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:ecommerceRevenue
+&metrics=ym:s:goal${currentGoal.id}reaches
 &date1=${formatDate(startDate)}
 &date2=${formatDate(endDate)}`, token)
         .then(response => response.json())
             .then(data => {
+                console.log(data),
                 setPreviousYearDataByDays(aggregateData(data.data[0].metrics[0]))
             })
                 .catch(error => console.log(error))
     
-            }, [updatePlot])
+            }, [currentGoal, updatePlot])
 
     useEffect(() => {
         if (!currentDataByDays) return
         if (!previousDataByDays) return
         if (!timePeriods) return
-        const ctx = clearPlot("PredictionPlot", "PredictionChartWrapper")
+        const ctx = clearPlot("GoalsPredictionPlot", "GoalsPredictionChartWrapper")
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -105,14 +111,20 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
                     lineTension:0.1,
                 }]
             },
+            options: {
+                title: {
+                    display: true,
+                    text: currentGoal.name
+                }
+            }
         });
     }, [currentDataByDays, timePeriods, previousDataByDays, previousYearDataByDays])
 
     return (
-        <div className = 'PredictionChartWrapper' style = {{width: '600px', height: '250px'}}>
-            <canvas id = "PredictionPlot" ></canvas>
+        <div className = 'GoalsPredictionChartWrapper' style = {{width: '600px', height: '250px'}}>
+            <canvas id = "GoalsPredictionPlot" ></canvas>
         </div>
     )
 }
 
-export default PredictionPlot
+export default GoalsPredictionPlotComponent

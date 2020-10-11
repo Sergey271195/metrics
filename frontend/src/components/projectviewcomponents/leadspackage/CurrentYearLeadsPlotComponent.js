@@ -6,14 +6,7 @@ import { getCurrentYearStart, formatDate, MONTH_DICTIONARY } from '../../Date'
 import Chart from 'chart.js';
 import { clearPlot } from '../../PlotUtils'
 
-const CurrentYearLeadsPlotComponent = ({goals}) => {
-
-    const [ currentGoal, setCurrentGoal ] = useState()
-
-    useEffect(() => {
-        if (!goals) return
-        setCurrentGoal(goals[0])
-    }, [goals])
+const CurrentYearLeadsPlotComponent = ({goals, currentGoal, setCurrentGoal}) => {
 
     const { views } = useContext(ViewsContext)
     const { token } = useContext(TokenContext)
@@ -34,18 +27,6 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
                 .then(data => setDataForTheYear(data.data[0].metrics[0]))
                     .catch(error => console.log(error))
         }, [currentGoal])
-
-        useEffect(() => {
-            if (!currentGoal) return
-GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
-&metrics=ym:s:goal${currentGoal.id}revenue
-&date1=${formatDate(getCurrentYearStart())}
-&date2=${formatDate(new Date())}`, token)
-            .then(response => response.json())
-                .then(data => console.log(data.data[0].metrics[0]))
-                    .catch(error => console.log(error))
-        }, [currentGoal])
-
 
     useEffect(() => {
         if (!currentGoal) return

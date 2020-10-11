@@ -6,6 +6,7 @@ import { DateForPlotsContext } from '../../../context/DateForPlotsContext'
 import CompareLeadsComponent from './CompareLeadsComponent'
 import LeadsPlotComponent from './LeadsPlotComponent'
 import CurrentYearLeadsPlotComponent from './CurrentYearLeadsPlotComponent'
+import GoalsPredictionPlotComponent from './GoalsPredictionPlotComponent'
 
 const LeadsComponent = ({updatePlot}) => {
 
@@ -15,6 +16,12 @@ const LeadsComponent = ({updatePlot}) => {
     const [ goals, setGoals ] = useState()
     const [ currentGoalsData, setCurrentGoalsData ] = useState()
     const [ previousGoalsData, setPreviousGoalsData ] = useState()
+    const [ currentGoal, setCurrentGoal ] = useState()
+
+    useEffect(() => {
+        if (!goals) return
+        setCurrentGoal(goals[0])
+    }, [goals])
 
     const { timePeriod: {
                 firstPeriod,
@@ -66,7 +73,10 @@ const LeadsComponent = ({updatePlot}) => {
                  currentGoalsData = {currentGoalsData} previousGoalsData = {previousGoalsData}/>
         </div>
         <div>
-            {goals && <CurrentYearLeadsPlotComponent goals = {goals} />}
+            {goals && <CurrentYearLeadsPlotComponent goals = {goals} currentGoal = {currentGoal} setCurrentGoal = {setCurrentGoal}/>}
+        </div>
+        <div>
+            {currentGoal && <GoalsPredictionPlotComponent currentGoal = {currentGoal} updatePlot = {updatePlot}/>}
         </div>
         </>
     )
