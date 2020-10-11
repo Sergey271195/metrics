@@ -20,8 +20,6 @@ const ProjectView = () => {
 
     const project = views.project.data
 
-    const { data: goals } = GETFetchAuth(`https://api-metrika.yandex.net/management/v1/counter/${project.webpage.jandexid}/goals`, token)
-
 
     /* const createQuery = (goals) => {
         return goals.goals.map(goal => {

@@ -3,14 +3,17 @@ import { TokenContext } from '../../context/TokenContext'
 import { ViewsContext } from '../../context/ViewsContext'
 import { GETFetchAuthV } from '../Utils'
 import { currentDate, startOfCurrentMonth,
-        previousMonthSameDate, startPreviousMonth, formatDate,
-        MONTH_DICTIONARY } from '../Date'
+        previousMonthSameDate, startPreviousMonth, formatDate} from '../Date'
 import Chart from 'chart.js';
+import { DateForPlotsContext } from '../../context/DateForPlotsContext'
 
-const PredictionPlot = () => {
+const PredictionPlot = ({updatePlot}) => {
 
     const { views } = useContext(ViewsContext)
     const { token } = useContext(TokenContext)
+    const {timePeriod: {
+        firstPeriod
+    }} = useContext(DateForPlotsContext)
 
     const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
     const project = views.project.data
@@ -39,8 +42,8 @@ const PredictionPlot = () => {
 /* Current period */
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
 &metrics=ym:s:ecommerceRevenue
-&date1=${formatDate(startOfCurrentMonth())}
-&date2=${formatDate(currentDate())}`, token)
+&date1=${firstPeriod.start}
+&date2=${firstPeriod.end}`, token)
         .then(response => response.json())
             .then(data => {
                 setCurrentDataByDays(aggregateData(data.data[0].metrics[0])),
@@ -48,14 +51,14 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
             })
                 .catch(error => console.log(error))
 
-    }, [])
+    }, [updatePlot])
 
     useEffect(() => {
         /* Previous period */
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
 &metrics=ym:s:ecommerceRevenue
-&date1=${formatDate(startPreviousMonth(currentDate()))}
-&date2=${formatDate(previousMonthSameDate(currentDate()))}`, token)
+&date1=${formatDate(previousMonthSameDate(new Date(firstPeriod.start)))}
+&date2=${formatDate(previousMonthSameDate(new Date(firstPeriod.end)))}`, token)
         .then(response => response.json())
             .then(data => {
                 console.log(data),
@@ -63,15 +66,15 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
             })
                 .catch(error => console.log(error))
 
-        }, [])
+        }, [updatePlot])
 
         useEffect(() => {
             /* Previous year */
         
-            const endDate = new Date()
+            const endDate = new Date(firstPeriod.end)
             endDate.setFullYear(endDate.getFullYear()-1)
 
-            const startDate = new Date()
+            const startDate = new Date(firstPeriod.start)
             startDate.setFullYear(startDate.getFullYear()-1)
             startDate.setDate(1)
 
@@ -86,7 +89,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
             })
                 .catch(error => console.log(error))
     
-            }, [])
+            }, [updatePlot])
 
     useEffect(() => {
         if (!currentDataByDays) return

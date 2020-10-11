@@ -7,6 +7,7 @@ import CurrentWebPageContextProvider from '../context/CurrentWebPageContext'
 import EmployeeContextProvider from '../context/EmployeeContext';
 import ProjectsContextProvider from '../context/ProjectsContext'
 import ViewsContextProvider from '../context/ViewsContext';
+import DateForPlotsContextProvider from '../context/DateForPlotsContext';
 
 
 const App = () => {
@@ -17,7 +18,9 @@ const App = () => {
                     <EmployeeContextProvider>
                         <ProjectsContextProvider>
                             <ViewsContextProvider>
-                                <Contoller />
+                                <DateForPlotsContextProvider>
+                                    <Contoller />
+                                </DateForPlotsContextProvider>
                             </ViewsContextProvider>
                         </ProjectsContextProvider>
                     </EmployeeContextProvider>

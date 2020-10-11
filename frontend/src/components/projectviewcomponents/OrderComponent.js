@@ -1,17 +1,24 @@
 import React, {useState, useContext, useEffect} from 'react'
 import { GETFetchAuthV } from '../Utils'
-import { currentDate, startOfCurrentMonth, previousMonthSameDate, startPreviousMonth, formatDate } from '../Date'
 import { TokenContext } from '../../context/TokenContext'
 import { ViewsContext } from '../../context/ViewsContext'
 import CompareComponent from './CompareComponent'
 import OrderPlotComponent from './OrderPlotComponent'
 import CurrentYearOrderPlotComponent from './CurrentYearOrderPlotComponent'
 import PredictionPlot from './PredictionPlot'
+import { DateForPlotsContext } from '../../context/DateForPlotsContext'
+import LeadsComponent from './leadspackage/LeadsComponent'
 
 const OrderComponent = () => {
 
     const { views } = useContext(ViewsContext)
     const { token } = useContext(TokenContext)
+
+    const { timePeriod: {
+                firstPeriod,
+                secondPeriod
+            },
+                setTimePeriod } = useContext(DateForPlotsContext)
 
     const JandexStat = 'https://api-metrika.yandex.net/stat/v1/data?'
     const project = views.project.data
@@ -20,22 +27,11 @@ const OrderComponent = () => {
     const [ dataSecondPart, setDataSecondPart ] = useState()
     const [ updatePlot, setUpdatePlot ] = useState(true)
 
-    const [ firstPeriod, setFirstPeriod ] = useState({
-        start: formatDate(startOfCurrentMonth()),
-        end: formatDate(currentDate())
-    })
-    const [ secondPeriod, setSecondPeriod ] = useState({
-        start: formatDate(startPreviousMonth(startOfCurrentMonth())),
-        end: formatDate(previousMonthSameDate(currentDate()))
-    })
-
-
     const fetchNewData = (event) => {
         event.preventDefault()
         if (new Date(firstPeriod.start) - new Date(firstPeriod.end) > 0) return
         if (new Date(secondPeriod.start) - new Date(secondPeriod.end) > 0) return
         setUpdatePlot(!updatePlot)
-
     }
 
     useEffect(() => {
@@ -81,16 +77,16 @@ const OrderComponent = () => {
             <form onSubmit = {(event) => fetchNewData(event)}>
                 <div style = {{display: 'flex'}}>
                     <input defaultValue = {firstPeriod.start} type = 'date' placeholder = 'Начало первого периода'
-                        onChange = {(event) => {setFirstPeriod({...firstPeriod, start: event.target.value})}}/>
+                        onChange = {(event) => setTimePeriod({type: 'CHANGE_FIRST_START', data: event.target.value})}/>
                     <input defaultValue = {firstPeriod.end} type = 'date' placeholder = 'Окончание первого периода'
-                        onChange = {(event) => {setFirstPeriod({...firstPeriod, end: event.target.value})}}/>
+                        onChange = {(event) => setTimePeriod({type: 'CHANGE_FIRST_END', data: event.target.value})}/>
                 </div>
                 
                 <div style = {{display: 'flex'}}>
                     <input value = {secondPeriod.start} type = 'date' placeholder = 'Начало второго периода'
-                        onChange = {(event) => {setSecondPeriod({...secondPeriod, start: event.target.value})}}/>
+                        onChange = {(event) => setTimePeriod({type: 'CHANGE_SECOND_START', data: event.target.value})}/>
                     <input value = {secondPeriod.end} type = 'date' placeholder = 'Окончание второго периода'
-                        onChange = {(event) => {setSecondPeriod({...secondPeriod, end: event.target.value})}}/>
+                        onChange = {(event) => setTimePeriod({type: 'CHANGE_SECOND_END', data: event.target.value})}/>
                 </div>
                 <button>Сравнить периоды</button>
             </form>
@@ -101,7 +97,10 @@ const OrderComponent = () => {
             </div>
             <div style = {{display: 'flex', flexDirection: 'column'}}>
                 <CurrentYearOrderPlotComponent />
-                <PredictionPlot />
+                <PredictionPlot updatePlot = {updatePlot}/>
+            </div>
+            <div style = {{display: 'flex', flexDirection: 'column'}}>
+                <LeadsComponent updatePlot = {updatePlot}/>
             </div>
         </div>
     )
