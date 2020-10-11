@@ -1,5 +1,4 @@
 export const DateForPlotsReducer = (state, action) => {
-    console.log(state)
     switch(action.type) {
         case 'CHANGE_FIRST_START': {
             return (

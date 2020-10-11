@@ -1,7 +1,7 @@
 import React, { useReducer, createContext } from 'react'
 //import { getFromLocalStorage } from '../components/Utils'
 import { currentDate, startOfCurrentMonth, previousMonthSameDate, startPreviousMonth, formatDate } from '../components/Date'
-import { DateForPlotsReducer } from '../reducers/DateForPlotsREducer'
+import { DateForPlotsReducer } from '../reducers/DateForPlotsReducer'
 
 export const DateForPlotsContext = createContext()
 
