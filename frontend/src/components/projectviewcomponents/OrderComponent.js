@@ -6,6 +6,7 @@ import { ViewsContext } from '../../context/ViewsContext'
 import CompareComponent from './CompareComponent'
 import OrderPlotComponent from './OrderPlotComponent'
 import CurrentYearOrderPlotComponent from './CurrentYearOrderPlotComponent'
+import PredictionPlot from './PredictionPlot'
 
 const OrderComponent = () => {
 
@@ -33,7 +34,6 @@ const OrderComponent = () => {
         event.preventDefault()
         if (new Date(firstPeriod.start) - new Date(firstPeriod.end) > 0) return
         if (new Date(secondPeriod.start) - new Date(secondPeriod.end) > 0) return
-        console.log('Success')
         setUpdatePlot(!updatePlot)
 
     }
@@ -52,7 +52,7 @@ const OrderComponent = () => {
 &date1=${firstPeriod.start}
 &date2=${firstPeriod.end}`, token)
             .then(response => response.json())
-                .then(data => {console.log(data), setDataFirstPart(data.totals)})
+                .then(data => setDataFirstPart(data.totals))
                     .catch(error => console.log(error))
 
     }, [updatePlot])
@@ -71,7 +71,7 @@ const OrderComponent = () => {
 &date1=${secondPeriod.start}
 &date2=${secondPeriod.end}`, token)
             .then(response => response.json())
-                .then(data => {console.log(data), setDataSecondPart(data.totals)})
+                .then(data => setDataSecondPart(data.totals))
                     .catch(error => console.log(error))
 
     }, [updatePlot])
@@ -99,8 +99,9 @@ const OrderComponent = () => {
                 <OrderPlotComponent dataFirstPart = {dataFirstPart} />
                 <CompareComponent dataFirstPart = {dataFirstPart} dataSecondPart = {dataSecondPart} />
             </div>
-            <div>
+            <div style = {{display: 'flex', flexDirection: 'column'}}>
                 <CurrentYearOrderPlotComponent />
+                <PredictionPlot />
             </div>
         </div>
     )

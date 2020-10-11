@@ -2,13 +2,10 @@ import React, { useEffect, useContext, useState } from 'react'
 import { TokenContext } from '../../context/TokenContext'
 import { ViewsContext } from '../../context/ViewsContext'
 import { GETFetchAuthV } from '../Utils'
-import { getCurrentYearStart, formatDate } from '../Date'
+import { getCurrentYearStart, formatDate, MONTH_DICTIONARY } from '../Date'
 import Chart from 'chart.js';
 
 const CurrentYearOrderPlotComponent = () => {
-
-    const MONTH_DICTIONARY = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-        "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
 
     const [plotType, setPlotType] = useState('Purchases')
 
@@ -80,7 +77,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
 
 
     return (
-        <>
+        <div style = {{marginBottom: '100px'}}>
         <div style = {{display: 'flex'}}>
             <button onClick = {() => setPlotType('Purchases')}>Количество</button>
             <button onClick = {() => setPlotType('TotalSum')}>Общая сумма</button>
@@ -89,7 +86,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
         <div className = 'chartWrapper' style = {{width: '600px', height: '250px'}}>
             <canvas id = "OdersByMonthChart" ></canvas>
         </div>
-        </>
+        </ div>
     )
 }
 

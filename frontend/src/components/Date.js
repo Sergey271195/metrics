@@ -54,3 +54,6 @@ export const getCurrentYearStart = () => {
     date.setMonth(0, 1)
     return date
 }
+
+export const MONTH_DICTIONARY = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
+        "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
