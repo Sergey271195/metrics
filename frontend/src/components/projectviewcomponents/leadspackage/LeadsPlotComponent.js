@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Chart from 'chart.js';
+import { clearPlot } from '../../PlotUtils';
 
 const LeadsPlotComponent = ({goals, currentGoalsData}) => {
 
@@ -8,7 +9,7 @@ const LeadsPlotComponent = ({goals, currentGoalsData}) => {
         const names = goals.map(goal => {
             return goal.name
         })
-        const ctx = document.getElementById("LeadsPlotComponent")
+        const ctx = clearPlot("LeadsPlotComponent", "LeadsChartWrapper")
         new Chart(ctx, {
             type: 'horizontalBar',
             data: {
@@ -54,7 +55,7 @@ const LeadsPlotComponent = ({goals, currentGoalsData}) => {
 
     return (
         /* Chart render */
-        <div className = 'chartWrapper' style = {{width: '800px', height: '400px', marginLeft: '100px'}}>
+        <div className = 'LeadsChartWrapper' style = {{width: '800px', height: '400px', marginLeft: '100px'}}>
             <canvas id = "LeadsPlotComponent" ></canvas>
         </div>
     )

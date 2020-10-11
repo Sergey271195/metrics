@@ -4,6 +4,7 @@ import { ViewsContext } from '../../context/ViewsContext'
 import { GETFetchAuthV } from '../Utils'
 import { getCurrentYearStart, formatDate, MONTH_DICTIONARY } from '../Date'
 import Chart from 'chart.js';
+import { clearPlot } from '../PlotUtils'
 
 const CurrentYearOrderPlotComponent = () => {
 
@@ -46,7 +47,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
 
 
         useEffect(() => {
-                const ctx = document.getElementById("OdersByMonthChart")
+                const ctx = clearPlot("OdersByMonthChart", "OrdersByMonthChartWrapper")
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -83,7 +84,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
             <button onClick = {() => setPlotType('TotalSum')}>Общая сумма</button>
             <button onClick = {() => setPlotType('SumPerPurchase')}>Средний чек</button>
         </div>
-        <div className = 'chartWrapper' style = {{width: '600px', height: '250px'}}>
+        <div className = 'OrdersByMonthChartWrapper' style = {{width: '600px', height: '250px'}}>
             <canvas id = "OdersByMonthChart" ></canvas>
         </div>
         </ div>

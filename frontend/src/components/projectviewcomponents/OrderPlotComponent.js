@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Chart from 'chart.js';
+import { clearPlot } from '../PlotUtils';
 
 const OrderPlotComponent = ({dataFirstPart}) => {
 
@@ -7,7 +8,7 @@ const OrderPlotComponent = ({dataFirstPart}) => {
 
     useEffect(() => {
         if (!dataFirstPart) return
-        const ctx = document.getElementById("MyChart")
+        const ctx = clearPlot("OrderChart", "OrderChartWrapper")
         new Chart(ctx, {
             type: 'horizontalBar',
             data: {
@@ -53,8 +54,8 @@ const OrderPlotComponent = ({dataFirstPart}) => {
 
     return (
         /* Chart render */
-        <div className = 'chartWrapper' style = {{width: '400px', height: '250px', marginRight: '100px'}}>
-            <canvas id = "MyChart" ></canvas>
+        <div className = 'OrderChartWrapper' style = {{width: '400px', height: '250px', marginRight: '100px'}}>
+            <canvas id = "OrderChart" ></canvas>
         </div>
     )
 }

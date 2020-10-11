@@ -6,6 +6,7 @@ import { currentDate, startOfCurrentMonth,
         previousMonthSameDate, startPreviousMonth, formatDate} from '../Date'
 import Chart from 'chart.js';
 import { DateForPlotsContext } from '../../context/DateForPlotsContext'
+import { clearPlot } from '../PlotUtils'
 
 const PredictionPlot = ({updatePlot}) => {
 
@@ -95,8 +96,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
         if (!currentDataByDays) return
         if (!previousDataByDays) return
         if (!timePeriods) return
-        console.log(previousYearDataByDays)
-        const ctx = document.getElementById("PredictionPlot")
+        const ctx = clearPlot("PredictionPlot", "PredictionChartWrapper")
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -127,7 +127,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
     }, [currentDataByDays, timePeriods, previousDataByDays, previousYearDataByDays])
 
     return (
-        <div className = 'chartWrapper2' style = {{width: '600px', height: '250px'}}>
+        <div className = 'PredictionChartWrapper' style = {{width: '600px', height: '250px'}}>
             <canvas id = "PredictionPlot" ></canvas>
         </div>
     )

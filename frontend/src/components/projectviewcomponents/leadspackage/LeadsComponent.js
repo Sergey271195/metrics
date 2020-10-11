@@ -5,6 +5,7 @@ import { ViewsContext } from '../../../context/ViewsContext'
 import { DateForPlotsContext } from '../../../context/DateForPlotsContext'
 import CompareLeadsComponent from './CompareLeadsComponent'
 import LeadsPlotComponent from './LeadsPlotComponent'
+import CurrentYearLeadsPlotComponent from './CurrentYearLeadsPlotComponent'
 
 const LeadsComponent = ({updatePlot}) => {
 
@@ -57,12 +58,17 @@ const LeadsComponent = ({updatePlot}) => {
     }, [goals, updatePlot])
 
     return (
+        <>
         <div style = {{diplay: 'flex', flexDirection: 'row', marginTop: '100px'}}>
             <LeadsPlotComponent goals = {goals}
                  currentGoalsData = {currentGoalsData} />
             <CompareLeadsComponent goals = {goals}
                  currentGoalsData = {currentGoalsData} previousGoalsData = {previousGoalsData}/>
         </div>
+        <div>
+            {goals && <CurrentYearLeadsPlotComponent goals = {goals} />}
+        </div>
+        </>
     )
 }
 
