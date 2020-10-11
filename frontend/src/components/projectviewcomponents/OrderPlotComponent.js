@@ -53,7 +53,7 @@ const OrderPlotComponent = ({dataFirstPart}) => {
 
     return (
         /* Chart render */
-        <div className = 'chartWrapper' style = {{width: '400px', height: '400px', marginRight: '100px'}}>
+        <div className = 'chartWrapper' style = {{width: '400px', height: '250px', marginRight: '100px'}}>
             <canvas id = "MyChart" ></canvas>
         </div>
     )

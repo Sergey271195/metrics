@@ -28,3 +28,29 @@ export const startPreviousMonth = (date) => {
     date.setMonth(date.getMonth()-1, 1)
     return date 
 }
+
+export const getCurrentYearPeriodsByMonth = () => {
+    const date = new Date()
+    const lastMonth = date.getMonth()
+    const startDates = []
+    const endDates = []
+    if (lastMonth > 0) {
+        for (let i = 0; i < lastMonth; i++) {
+            date.setMonth(i, 1)
+            startDates.push(formatDate(date))
+            date.setMonth(i+1, 0)
+            endDates.push(formatDate(date))
+        }
+    }
+    date.setMonth(lastMonth, 1)
+    startDates.push(formatDate(date))
+    endDates.push(formatDate(new Date()))
+    
+    return [startDates, endDates]
+}
+
+export const getCurrentYearStart = () => {
+    const date = new Date()
+    date.setMonth(0, 1)
+    return date
+}

@@ -5,6 +5,7 @@ import { TokenContext } from '../../context/TokenContext'
 import { ViewsContext } from '../../context/ViewsContext'
 import CompareComponent from './CompareComponent'
 import OrderPlotComponent from './OrderPlotComponent'
+import CurrentYearOrderPlotComponent from './CurrentYearOrderPlotComponent'
 
 const OrderComponent = () => {
 
@@ -87,9 +88,9 @@ const OrderComponent = () => {
                 
                 <div style = {{display: 'flex'}}>
                     <input value = {secondPeriod.start} type = 'date' placeholder = 'Начало второго периода'
-                        onChange = {(event) => {setSecondPeriod({...firstPeriod, start: event.target.value})}}/>
+                        onChange = {(event) => {setSecondPeriod({...secondPeriod, start: event.target.value})}}/>
                     <input value = {secondPeriod.end} type = 'date' placeholder = 'Окончание второго периода'
-                        onChange = {(event) => {setSecondPeriod({...firstPeriod, start: event.target.value})}}/>
+                        onChange = {(event) => {setSecondPeriod({...secondPeriod, end: event.target.value})}}/>
                 </div>
                 <button>Сравнить периоды</button>
             </form>
@@ -97,6 +98,9 @@ const OrderComponent = () => {
             <div style = {{display: 'flex'}}>
                 <OrderPlotComponent dataFirstPart = {dataFirstPart} />
                 <CompareComponent dataFirstPart = {dataFirstPart} dataSecondPart = {dataSecondPart} />
+            </div>
+            <div>
+                <CurrentYearOrderPlotComponent />
             </div>
         </div>
     )
