@@ -85,3 +85,31 @@
 
         </div>
     )
+
+
+    /* useEffect(() => {
+        if (!goals) return
+        Promise.all(goals.map(goal => {
+            return GETFetchAuthV(`${JandexStat}id=${project.webpage.jandexid}
+&metrics=ym:s:goal${goal.jandexid}reaches
+&date1=${firstPeriod.start}
+&date2=${firstPeriod.end}`, token)
+        })).then(responses => Promise.all(responses.map(response => response.json())))
+        .then(data => {
+            setCurrentGoalsData(data.map(entry =>{
+                console.log('entry')
+                console.log(entry.totals[0])
+                return (entry.totals[0])}))
+        })
+    }, [goals, updatePlot]) */
+
+    /* useEffect(() => {
+        if (!goals) return
+        Promise.all(goals.map(goal => {
+            return GETFetchAuthV(`${JandexStat}id=${project.webpage.jandexid}
+&metrics=ym:s:goal${goal.jandexid}reaches
+&date1=${secondPeriod.start}
+&date2=${secondPeriod.end}`, token)
+        })).then(responses => Promise.all(responses.map(response => response.json())))
+        .then(data => setPreviousGoalsData(data.map(entry =>{return (entry.totals[0])})))
+    }, [goals, updatePlot]) */

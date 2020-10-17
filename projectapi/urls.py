@@ -4,7 +4,7 @@ from .views import (tokenview, get_employee_view,
                      refreshwebpages, getwebpages,
                      create_project_view, get_project_view, delete_project_view,
                      add_user_to_project_view, get_project_by_id_view,
-                     get_project_goals, disable_goal, enable_goal, get_project_goals_unactive,
+                     get_project_goals, disable_goal, enable_goal, get_project_goals_all,
                      goals_reaches_view
                     )
 
@@ -28,10 +28,11 @@ urlpatterns = [
 
     #Goals views
     path('goals/get/<int:pk>', get_project_goals),
-    path('goals/get/unactive/<int:pk>', get_project_goals_unactive),
+    path('goals/get/all/<int:pk>', get_project_goals_all),
     path('goals/disable/<int:pk>', disable_goal),
     path('goals/enable/<int:pk>', enable_goal),
 
     #Jandex connection
     path('jandexdata/goals/reaches', goals_reaches_view),
+    path('jandexdata/goals/reaches/bytime', goals_reaches_view),
 ]

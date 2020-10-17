@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react'
 import { TokenContext } from '../../../context/TokenContext'
 import { ViewsContext } from '../../../context/ViewsContext'
-import { GETFetchAuthV } from '../../Utils'
+import { GETFetchAuthV, PostFetch } from '../../Utils'
 import { previousMonthSameDate, formatDate } from '../../Date'
 import Chart from 'chart.js';
 import { clearPlot, formatDatePeriods, aggregateData } from '../../PlotUtils'
@@ -13,7 +13,8 @@ const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
     const { token } = useContext(TokenContext)
 
     const {timePeriod: {
-        firstPeriod
+        firstPeriod,
+        filterParam
     }} = useContext(DataForPlotsContext)
 
     const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
@@ -23,6 +24,24 @@ const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
     const [ previousDataByDays, setPreviousDataByDays ] = useState()
     const [ previousYearDataByDays, setPreviousYearDataByDays ] = useState()
     const [ timePeriods, setTimePeriods ] = useState()
+
+    useEffect(() => {
+        if (!currentGoal) return
+        if (!firstPeriod) return
+        const data = {
+            date1: firstPeriod.start,
+            date2: firstPeriod.end,
+            jandexid: project.webpage.jandexid,
+            traffic_source: filterParam.sourceTraffic,
+            curr_goal_id: currentGoal.jandexid
+        }
+        PostFetch('api/jandexdata/goals/reaches/bytime', data)
+            .then(data => {
+                console.log('entry')
+                console.log(data)
+            })
+            .catch(error => console.log(error))
+    }, [currentGoal, updatePlot, filterParam])
 
     useEffect(() => {
     /* Current period */

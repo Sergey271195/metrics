@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { GETFetchAuthV } from '../Utils'
 import { TokenContext } from '../../context/TokenContext'
 import { ViewsContext } from '../../context/ViewsContext'
@@ -7,6 +7,7 @@ import OrderPlotComponent from './OrderPlotComponent'
 import CurrentYearOrderPlotComponent from './CurrentYearOrderPlotComponent'
 import PredictionPlot from './PredictionPlot'
 import { DataForPlotsContext } from '../../context/DataForPlotsContext'
+import { TrafficSources } from '../PlotUtils'
 
 
 const OrderComponent = ({updatePlot, setUpdatePlot}) => {
@@ -14,9 +15,13 @@ const OrderComponent = ({updatePlot, setUpdatePlot}) => {
     const { views } = useContext(ViewsContext)
     const { token } = useContext(TokenContext)
 
+    const [ traffic, setTraffic ] = useState('all')
+    
+
     const { timePeriod: {
                 firstPeriod,
-                secondPeriod
+                secondPeriod,
+                filterParam
             },
                 setTimePeriod } = useContext(DataForPlotsContext)
 
@@ -25,6 +30,11 @@ const OrderComponent = ({updatePlot, setUpdatePlot}) => {
 
     const [ dataFirstPart, setDataFirstPart ] = useState()
     const [ dataSecondPart, setDataSecondPart ] = useState()
+
+    const changeTrafficSource = (event) => {
+        setTraffic(event.target.value)
+        setTimePeriod({type: 'CHANGE_TRAFFIC_SOURCE', data: event.target.value})
+    }
     
 
     const fetchNewData = (event) => {
@@ -73,7 +83,7 @@ const OrderComponent = ({updatePlot, setUpdatePlot}) => {
     }, [updatePlot])
 
     return(
-        <div>
+        <div style = {{display: 'flex', flexDirection: 'column'}}>
             <form onSubmit = {(event) => fetchNewData(event)}>
                 <div style = {{display: 'flex'}}>
                     <input defaultValue = {firstPeriod.start} type = 'date' placeholder = 'Начало первого периода'
@@ -89,8 +99,17 @@ const OrderComponent = ({updatePlot, setUpdatePlot}) => {
                         onChange = {(event) => setTimePeriod({type: 'CHANGE_SECOND_END', data: event.target.value})}/>
                 </div>
                 <button>Сравнить периоды</button>
+
             </form>
-            
+
+                <h3  style = {{margin:'10px'}}>Источники трафика</h3>
+                <select value = {traffic} onChange = {(event) => changeTrafficSource(event)}>
+                    <option value = 'all'>all</option>
+                    {TrafficSources.map(source => {
+                        return <option key = {source.id} value = {source.id}>{source.name}</option>
+                    })}
+                </select>
+
             <div style = {{display: 'flex'}}>
                 <h1>Заказы</h1>
                 <OrderPlotComponent dataFirstPart = {dataFirstPart} />

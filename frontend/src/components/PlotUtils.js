@@ -23,3 +23,38 @@ export const aggregateData = (data) => {
     })
     return aggregator == 0 ? [] : aggData
 }
+
+export const TrafficSources = [
+    {
+        id: 'organic',
+        name: 'Search engine traffic'
+    },
+    {
+        id: 'ad',
+        name: 'Add traffic'
+    },
+    {
+        id: 'direct',
+        name: 'Direct traffic'
+    },
+    {
+        id: 'referral',
+        name: 'Link traffic'
+    },
+    {
+        id: 'social',
+        name: 'Soical network traffic'
+    },
+    {
+        id: 'internal',
+        name: 'Internal traffic'
+    },
+    {
+        id: 'recommend',
+        name: 'Recommendation system traffic'
+    },
+    {
+        id: 'email',
+        name: 'Mailing traffic'
+    }
+]

@@ -7,7 +7,7 @@ from projectapi.serializers import ProjectSerializer, EmployeeSerializer
 import logging
 import json
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 @csrf_exempt
 def get_project_view(request):

@@ -46,3 +46,4 @@ class GoalSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only = True)
     jandexid = serializers.IntegerField(read_only = True)
     name = serializers.CharField()
+    active = serializers.BooleanField()

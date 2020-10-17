@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react'
-import { GETFetchAuthV, PostFetch } from '../../Utils'
-import { TokenContext } from '../../../context/TokenContext'
+import { PostFetch } from '../../Utils'
 import { ViewsContext } from '../../../context/ViewsContext'
 import { DataForPlotsContext } from '../../../context/DataForPlotsContext'
 import CompareLeadsComponent from './CompareLeadsComponent'
@@ -8,18 +7,13 @@ import LeadsPlotComponent from './LeadsPlotComponent'
 import CurrentYearLeadsPlotComponent from './CurrentYearLeadsPlotComponent'
 import GoalsPredictionPlotComponent from './GoalsPredictionPlotComponent'
 
-const LeadsComponent = ({updatePlot}) => {
+const LeadsComponent = ({updatePlot, goals, setGoals}) => {
 
     const { views } = useContext(ViewsContext)
-    const { token } = useContext(TokenContext)
 
-    const [ goals, setGoals ] = useState()
     const [ currentGoalsData, setCurrentGoalsData ] = useState()
     const [ previousGoalsData, setPreviousGoalsData ] = useState()
     const [ currentGoal, setCurrentGoal ] = useState()
-
-    console.log(goals)
-    console.log(views.project.data)
 
     useEffect(() => {
         if (!goals) return
@@ -28,67 +22,57 @@ const LeadsComponent = ({updatePlot}) => {
 
     const { timePeriod: {
                 firstPeriod,
-                secondPeriod
+                secondPeriod,
+                filterParam
             }} = useContext(DataForPlotsContext)
 
-    const JandexManage = 'https://api-metrika.yandex.net/management/v1/counter'
-    const JandexStat = 'https://api-metrika.yandex.net/stat/v1/data?'
     const project = views.project.data
 
-    console.log("GOALS")
-    console.log(goals)
-
-    useEffect(() => {
-        if (!goals) return
-        if (!firstPeriod) return
-        const data = {
-            date1: firstPeriod.start,
-            date2: firstPeriod.end,
-            jandexid: project.webpage.jandexid
-        }
-        PostFetch('api/jandexdata/goals/reaches', data)
-            .then(data => {
-                console.log('DATA'),
-                console.log(data)
-            })
-            .catch(error => console.log(error))
-    })
-
     useEffect(() => {
 
-        /* Info for the first part of time period */
+        
         fetch(`api/goals/get/${project.webpage.jandexid}`)
             .then(response => response.json())
-                .then(data => {console.log(data),  setGoals(data)})
+                .then(data => setGoals(data))
                     .catch(error => console.log(error))
 
     }, [project])
 
     useEffect(() => {
+        /* Info for the first part of time period */
         if (!goals) return
-        Promise.all(goals.map(goal => {
-            return GETFetchAuthV(`${JandexStat}id=${project.webpage.jandexid}
-&metrics=ym:s:goal${goal.jandexid}reaches
-&date1=${firstPeriod.start}
-&date2=${firstPeriod.end}`, token)
-        })).then(responses => Promise.all(responses.map(response => response.json())))
-        .then(data => {
-            setCurrentGoalsData(data.map(entry =>{
-                console.log(entry.data[0])
+        if (!firstPeriod) return
+        const data = {
+            date1: firstPeriod.start,
+            date2: firstPeriod.end,
+            jandexid: project.webpage.jandexid,
+            traffic_source: filterParam.sourceTraffic
+        }
+        PostFetch('api/jandexdata/goals/reaches', data)
+            .then(data => {
+                setCurrentGoalsData(data.map(entry =>{
                 return (entry.totals[0])}))
-        })
-    }, [goals, updatePlot])
+            })
+            .catch(error => console.log(error))
+    }, [goals, updatePlot, filterParam])
 
     useEffect(() => {
+        /* Info for the second part of time period */
         if (!goals) return
-        Promise.all(goals.map(goal => {
-            return GETFetchAuthV(`${JandexStat}id=${project.webpage.jandexid}
-&metrics=ym:s:goal${goal.jandexid}reaches
-&date1=${secondPeriod.start}
-&date2=${secondPeriod.end}`, token)
-        })).then(responses => Promise.all(responses.map(response => response.json())))
-        .then(data => setPreviousGoalsData(data.map(entry =>{return (entry.totals[0])})))
-    }, [goals, updatePlot])
+        if (!secondPeriod) return
+        const data = {
+            date1: secondPeriod.start,
+            date2: secondPeriod.end,
+            jandexid: project.webpage.jandexid,
+            traffic_source: filterParam.sourceTraffic
+        }
+        PostFetch('api/jandexdata/goals/reaches', data)
+            .then(data => {
+                setPreviousGoalsData(data.map(entry =>{
+                return (entry.totals[0])}))
+            })
+            .catch(error => console.log(error))
+    }, [goals, updatePlot, filterParam])
 
     return (
         <>

@@ -17,7 +17,7 @@ const DataForPlotsContextProvider = (props) => {
             end: formatDate(previousMonthSameDate(currentDate()))
         },
         filterParam: {
-            sourceTraffic: ''
+            sourceTraffic: 'all'
         }
     }
 

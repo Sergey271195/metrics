@@ -15,6 +15,7 @@ import ProjectView from './views/ProjectView'
 import EmployeeView from './views/EmployeeView'
 import { EmployeeContext } from '../context/EmployeeContext';
 import ProjectListView from './views/ProjectListView';
+import ProjectOptionsView from './views/ProjectOptionsView';
 
 
 
@@ -54,9 +55,7 @@ const Controller = () => {
 
             <div style = {{display: 'flex'}}>
                 <Switch>
-                    <Route path = "/project/:id">
-                        <ProjectView />
-                    </Route>
+                    <Route path = "/project/:id" children={<ProjectView />} />
                     <Route path = "/employee">
                         <EmployeeView />
                     </Route>

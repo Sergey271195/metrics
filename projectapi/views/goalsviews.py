@@ -9,7 +9,7 @@ import json
 import os
 import requests
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 METRIC_TOKEN = os.environ.get('METRIC_TOKEN')
 HEADERS = {"Authorization": f"OAuth {METRIC_TOKEN}"}
@@ -38,15 +38,15 @@ def get_project_goals(request, pk):
         - pk - id проекта
     Цели фильтруются по активности. Возвращаются только неактивные цели
 """
-def get_project_goals_unactive(request, pk):
-    logging.info(f'[GET GOALS UNACTIVE] requesting goals for Project {pk}')
+def get_project_goals_all(request, pk):
+    logging.info(f'[GET GOALS ALL] requesting goals for Project {pk}')
     try:
-        goals = Goal.objects.filter(project__jandexid = pk).filter(active = False)
+        goals = Goal.objects.filter(project__jandexid = pk)
         serializer = GoalSerializer(goals, many = True)
-        logging.info(f'[GET GOALS UNACTIVE] successfully returning goals for Project {pk}')
+        logging.info(f'[GET GOALS ALL] successfully returning goals for Project {pk}')
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     except Exception as e:
-        logging.info(f'[GET GOALS UNACTIVE] error while returning goals for Project {pk}')
+        logging.info(f'[GET GOALS ALL] error while returning goals for Project {pk}')
         logging.info(e)
 
 """ Перевод цели в неактивное состояние (не отображается на графиках и в таблицах) """
