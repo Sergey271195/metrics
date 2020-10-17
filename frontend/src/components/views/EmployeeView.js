@@ -1,12 +1,14 @@
 import React from 'react'
-import ToMainButton from '../routerbuttons/ToMainButton'
+import CreateEmployeeComponent from '../CreateEmployeeComponent'
+import EmployeeListComponent from '../mainviewpackage/EmployeeListComponent'
 
 const EmployeeView = () => {
     return(
-        <>
-        <ToMainButton />
-        <div>EmployeeView</div>
-        </>
+        <div style = {{display: 'flex', flexDirection: 'column'}}>
+            <h1>Сотрудники</h1>
+            <CreateEmployeeComponent />
+            <EmployeeListComponent />
+        </div>
     )
 }
 

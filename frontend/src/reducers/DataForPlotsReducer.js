@@ -1,4 +1,4 @@
-export const DateForPlotsReducer = (state, action) => {
+export const DataForPlotsReducer = (state, action) => {
     switch(action.type) {
         case 'CHANGE_FIRST_START': {
             return (

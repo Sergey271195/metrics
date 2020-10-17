@@ -4,7 +4,7 @@ import { ViewsContext } from '../../context/ViewsContext'
 import { GETFetchAuthV } from '../Utils'
 import {previousMonthSameDate, formatDate} from '../Date'
 import Chart from 'chart.js';
-import { DateForPlotsContext } from '../../context/DateForPlotsContext'
+import { DataForPlotsContext } from '../../context/DataForPlotsContext'
 import { clearPlot, formatDatePeriods, aggregateData } from '../PlotUtils'
 
 const PredictionPlot = ({updatePlot}) => {
@@ -13,7 +13,7 @@ const PredictionPlot = ({updatePlot}) => {
     const { token } = useContext(TokenContext)
     const {timePeriod: {
         firstPeriod
-    }} = useContext(DateForPlotsContext)
+    }} = useContext(DataForPlotsContext)
 
     const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
     const project = views.project.data

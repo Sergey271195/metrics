@@ -9,8 +9,6 @@ import json
 
 logging.basicConfig(level=logging.DEBUG)
 
-#.exclude(id__in=object_id_list)
-
 @csrf_exempt
 def get_project_view(request):
 
@@ -19,6 +17,17 @@ def get_project_view(request):
         serializer = ProjectSerializer(projects, many = True)
         logging.info(f'Retrieving all projects')
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+
+
+""" View для создания нового проекта
+    Входные данные, необходимые для создания модели Project
+    - name - название проекта (уникальное)
+    - type - тип проекта (ENUM) на данный момент два типа
+        STORE = 'IS', ('Интернет-магазин')
+        CORPORATIVE = 'CS', ('Корпоративный сайт')
+    - employee - id сотрудника - руководителя проекта (либо менеджера)
+    - webpage_id - jandexid проекта в Яндекс Метрике (идет привязка 1 к 1 с преоктом в Яндекс Метрика)
+"""
 
 @csrf_exempt
 def create_project_view(request):
@@ -47,7 +56,7 @@ def create_project_view(request):
             return JsonResponse({"STATUS_CODE": 404})
 
         try:
-            new_project = Project(name = project_name, _type = Project.TYPE_CHOICES(project_type), webpage = connected_webpage)
+            new_project = Project(name = project_name, _type = Project.TYPE_CHOICES(project_type), webpage = connected_webpage, jandexid = webpage_id)
             new_project.save()
 
             project_employee_connection = ProjectEmployeeConnection(project = new_project, employee = connected_employee)
@@ -113,3 +122,4 @@ def add_user_to_project_view(request, pk, uid):
         except IntegrityError:
             logging.info(f'Add user: connection already exist')
             return JsonResponse({'STATUS_CODE': 500, 'MESSAGE': 'EMPLOYEE PROJECT CONNECTION ALREADY EXIST'})
+

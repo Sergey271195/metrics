@@ -20,7 +20,7 @@ const CurrentYearLeadsPlotComponent = ({goals, currentGoal, setCurrentGoal}) => 
     useEffect(() => {
     if (!currentGoal) return
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
-&metrics=ym:s:goal${currentGoal.id}reaches
+&metrics=ym:s:goal${currentGoal.jandexid}reaches
 &date1=${formatDate(getCurrentYearStart())}
 &date2=${formatDate(new Date())}`, token)
             .then(response => response.json())

@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework import serializers
-from .models import Employee, WebPage, Project, ProjectEmployeeConnection
+from .models import Employee, WebPage, Project, ProjectEmployeeConnection, Goal
 
 
 class EmployeeSerializer(serializers.Serializer):
@@ -40,3 +40,9 @@ class ProjectEmployeeConnectionSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only = True)
     project = ProjectSerializer(many = True)
     employee = EmployeeSerializer(many = True)
+
+class GoalSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField(read_only = True)
+    jandexid = serializers.IntegerField(read_only = True)
+    name = serializers.CharField()

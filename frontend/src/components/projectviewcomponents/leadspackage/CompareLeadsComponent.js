@@ -13,7 +13,7 @@ const CompareLeadsComponent = ({goals, currentGoalsData, previousGoalsData}) => 
         <div>
             {currentGoalsData && previousGoalsData && goals.map((item, index) => {
                 return(
-                    <div key = {item.id}>
+                    <div key = {item.jandexid} style = {{border: '1px solid black'}}>
                         <div style = {{marginBottom: '5px', marginTop: '5px'}}>{index + 1}) {item.name}</div>
                         <div style = {{display: 'flex'}}>
                             <div style = {{marginRight: '30px'}}>{currentGoalsData[index]}</div>

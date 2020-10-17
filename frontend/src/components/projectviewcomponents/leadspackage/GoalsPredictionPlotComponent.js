@@ -5,7 +5,7 @@ import { GETFetchAuthV } from '../../Utils'
 import { previousMonthSameDate, formatDate } from '../../Date'
 import Chart from 'chart.js';
 import { clearPlot, formatDatePeriods, aggregateData } from '../../PlotUtils'
-import { DateForPlotsContext } from '../../../context/DateForPlotsContext'
+import { DataForPlotsContext } from '../../../context/DataForPlotsContext'
 
 const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
 
@@ -14,7 +14,7 @@ const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
 
     const {timePeriod: {
         firstPeriod
-    }} = useContext(DateForPlotsContext)
+    }} = useContext(DataForPlotsContext)
 
     const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
     const project = views.project.data
@@ -28,7 +28,7 @@ const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
     /* Current period */
     if (!currentGoal) return
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:goal${currentGoal.id}reaches
+&metrics=ym:s:goal${currentGoal.jandexid}reaches
 &date1=${firstPeriod.start}
 &date2=${firstPeriod.end}`, token)
         .then(response => response.json())
@@ -45,7 +45,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
     /* Previous period */
     if (!currentGoal) return
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:goal${currentGoal.id}reaches
+&metrics=ym:s:goal${currentGoal.jandexid}reaches
 &date1=${formatDate(previousMonthSameDate(new Date(firstPeriod.start)))}
 &date2=${formatDate(previousMonthSameDate(new Date(firstPeriod.end)))}`, token)
         .then(response => response.json())
@@ -68,7 +68,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
             startDate.setDate(1)
 
 GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:goal${currentGoal.id}reaches
+&metrics=ym:s:goal${currentGoal.jandexid}reaches
 &date1=${formatDate(startDate)}
 &date2=${formatDate(endDate)}`, token)
         .then(response => response.json())

@@ -1,11 +1,11 @@
 import React, { useReducer, createContext } from 'react'
 //import { getFromLocalStorage } from '../components/Utils'
 import { currentDate, startOfCurrentMonth, previousMonthSameDate, startPreviousMonth, formatDate } from '../components/Date'
-import { DateForPlotsReducer } from '../reducers/DateForPlotsReducer'
+import { DataForPlotsReducer } from '../reducers/DataForPlotsReducer'
 
-export const DateForPlotsContext = createContext()
+export const DataForPlotsContext = createContext()
 
-const DateForPlotsContextProvider = (props) => {
+const DataForPlotsContextProvider = (props) => {
 
     const initial_data  = {
         firstPeriod: {
@@ -15,16 +15,19 @@ const DateForPlotsContextProvider = (props) => {
         secondPeriod: {
             start: formatDate(startPreviousMonth(startOfCurrentMonth())),
             end: formatDate(previousMonthSameDate(currentDate()))
+        },
+        filterParam: {
+            sourceTraffic: ''
         }
     }
 
-    const [ timePeriod, setTimePeriod ] = useReducer(DateForPlotsReducer, initial_data)
+    const [ timePeriod, setTimePeriod ] = useReducer(DataForPlotsReducer, initial_data)
 
     return (
-        <DateForPlotsContext.Provider value = {{timePeriod, setTimePeriod}}>
+        <DataForPlotsContext.Provider value = {{timePeriod, setTimePeriod}}>
             {props.children}
-        </DateForPlotsContext.Provider>
+        </DataForPlotsContext.Provider>
     )
 }
 
-export default DateForPlotsContextProvider
+export default DataForPlotsContextProvider

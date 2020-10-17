@@ -112,3 +112,5 @@ backup/
 bitrix/
 utils/
 metrics/
+pix.py
+asynctest.py

@@ -6,10 +6,10 @@ import CompareComponent from './CompareComponent'
 import OrderPlotComponent from './OrderPlotComponent'
 import CurrentYearOrderPlotComponent from './CurrentYearOrderPlotComponent'
 import PredictionPlot from './PredictionPlot'
-import { DateForPlotsContext } from '../../context/DateForPlotsContext'
-import LeadsComponent from './leadspackage/LeadsComponent'
+import { DataForPlotsContext } from '../../context/DataForPlotsContext'
 
-const OrderComponent = () => {
+
+const OrderComponent = ({updatePlot, setUpdatePlot}) => {
 
     const { views } = useContext(ViewsContext)
     const { token } = useContext(TokenContext)
@@ -18,14 +18,14 @@ const OrderComponent = () => {
                 firstPeriod,
                 secondPeriod
             },
-                setTimePeriod } = useContext(DateForPlotsContext)
+                setTimePeriod } = useContext(DataForPlotsContext)
 
     const JandexStat = 'https://api-metrika.yandex.net/stat/v1/data?'
     const project = views.project.data
 
     const [ dataFirstPart, setDataFirstPart ] = useState()
     const [ dataSecondPart, setDataSecondPart ] = useState()
-    const [ updatePlot, setUpdatePlot ] = useState(true)
+    
 
     const fetchNewData = (event) => {
         event.preventDefault()
@@ -92,15 +92,15 @@ const OrderComponent = () => {
             </form>
             
             <div style = {{display: 'flex'}}>
+                <h1>Заказы</h1>
                 <OrderPlotComponent dataFirstPart = {dataFirstPart} />
                 <CompareComponent dataFirstPart = {dataFirstPart} dataSecondPart = {dataSecondPart} />
             </div>
             <div style = {{display: 'flex', flexDirection: 'column'}}>
+                <h1>Заказы по месяцам</h1>
                 <CurrentYearOrderPlotComponent />
+                <h1>Прогноз по заказам (//TODO)</h1>
                 <PredictionPlot updatePlot = {updatePlot}/>
-            </div>
-            <div style = {{display: 'flex', flexDirection: 'column'}}>
-                <LeadsComponent updatePlot = {updatePlot}/>
             </div>
         </div>
     )
