@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import Chart from 'chart.js';
 import { clearPlot } from '../../PlotUtils';
 
-const LeadsPlotComponent = ({goals, currentGoalsData}) => {
+const LeadsPlotComponent = ({goals, currentFilteredData}) => {
 
     useEffect(() => {
-        if (!currentGoalsData) return
+        if (!currentFilteredData) return
         const names = goals.map(goal => {
             return goal.name
         })
@@ -17,7 +17,7 @@ const LeadsPlotComponent = ({goals, currentGoalsData}) => {
                 responsive: true,
                 datasets: [{
                     label: 'Лиды',
-                    data: currentGoalsData,
+                    data: currentFilteredData,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -50,12 +50,12 @@ const LeadsPlotComponent = ({goals, currentGoalsData}) => {
                 }
             }
         });
-    }, [currentGoalsData])
+    }, [currentFilteredData])
 
 
     return (
         /* Chart render */
-        <div className = 'LeadsChartWrapper' style = {{width: '800px', height: '400px', marginLeft: '100px'}}>
+        <div className = 'LeadsChartWrapper' style = {{width: '400px', height: '200px', marginRight: '50px', marginBottom: '20px'}}>
             <canvas id = "LeadsPlotComponent" ></canvas>
         </div>
     )

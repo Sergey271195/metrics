@@ -10,7 +10,7 @@ const ProjectListComponent = (type) => {
     useEffect(() => {
         fetch('/api/project/getall')
             .then(response => response.json())
-                .then(data =>  {console.log(data), dispatchProjects({type: 'FETCH', data: data})})
+                .then(data =>  dispatchProjects({type: 'FETCH', data: data}))
                     .catch(error => console.log(error))
     }, [])
 

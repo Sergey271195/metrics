@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Chart from 'chart.js';
-import { clearPlot } from '../PlotUtils';
+import { clearPlot } from '../../PlotUtils';
 
 const OrderPlotComponent = ({dataFirstPart}) => {
 

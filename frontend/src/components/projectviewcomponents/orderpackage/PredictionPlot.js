@@ -1,11 +1,11 @@
 import React, {useEffect, useState, useContext} from 'react'
-import { TokenContext } from '../../context/TokenContext'
-import { ViewsContext } from '../../context/ViewsContext'
-import { GETFetchAuthV } from '../Utils'
-import {previousMonthSameDate, formatDate} from '../Date'
+import { TokenContext } from '../../../context/TokenContext'
+import { ViewsContext } from '../../../context/ViewsContext'
+import { GETFetchAuthV } from '../../Utils'
+import {previousMonthSameDate, formatDate} from '../../Date'
 import Chart from 'chart.js';
-import { DataForPlotsContext } from '../../context/DataForPlotsContext'
-import { clearPlot, formatDatePeriods, aggregateData } from '../PlotUtils'
+import { DataForPlotsContext } from '../../../context/DataForPlotsContext'
+import { clearPlot, formatDatePeriods, aggregateData } from '../../PlotUtils'
 
 const PredictionPlot = ({updatePlot}) => {
 

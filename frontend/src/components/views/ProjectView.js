@@ -1,18 +1,28 @@
 import React, { useState, useEffect, useContext } from 'react'
-import OrderComponent from '../projectviewcomponents/OrderComponent'
+import OrderComponent from '../projectviewcomponents/orderpackage/OrderComponent'
 import LeadsComponent from '../projectviewcomponents/leadspackage/LeadsComponent'
-import { useParams } from 'react-router-dom'
 import { ViewsContext } from '../../context/ViewsContext'
 import ProjectOptionsView from './ProjectOptionsView'
+import FilterRequestsComponent from '../projectviewcomponents/projectutilspackage/FilterRequestsComponent'
+
+import {
+    Switch,
+    Route,
+    Link,
+    useParams,
+    useRouteMatch
+  } from "react-router-dom";
 
 const ProjectView = () => {
 
     let { id } = useParams()
+    let { path, url } = useRouteMatch();
     const { dispatchViews } = useContext(ViewsContext)
     const [ goals, setGoals ] = useState()
-    const [ optionsview, setOptionsView ] = useState(false)
+    const [ updatePlot, setUpdatePlot ] = useState(true)
 
     const switchToProjectView = () => {
+        console.log('switching project')
         fetch(`/api/project/get/${id}`)
             .then(response => response.json())
                 .then(data => {
@@ -24,28 +34,35 @@ const ProjectView = () => {
     }
 
     useEffect(() => {
+        if (!id) return
         switchToProjectView()
     }, [id])
 
-    const [ updatePlot, setUpdatePlot ] = useState(true)
-    if (optionsview) {
-        return (
-            <div style = {{display: 'flex', flexDirection: 'column'}}>
-                <button onClick = {() => setOptionsView(false)}>На главную страницу проекта</button>
-                <ProjectOptionsView goals = {goals} setGoals = {setGoals}/>
-            </div>
-        )
-    }
     return(
-        <div style = {{display: 'flex', flexDirection: 'column'}}>
-            <button onClick = {() => setOptionsView(true)}>Настройки проекта</button>
-            <div style = {{display: 'flex'}}>
-                <div style  = {{marginLeft: '20px'}}>Заказы</div>
+        <div style = {{display: 'flex', width: '100%', justifyContent: 'center'}}>
+
+            <div style = {{display: 'flex', flexDirection: 'column', width: '20%', backgroundColor: 'grey', height: '100%', marginRight: '50px'}}>
+                <Link to = {`${url}/options`} style = {{margin: '10px', textDecoration: 'none',
+                    fontSize: '15px', textAlign: 'center'}}>Настройки проекта</Link>
+                <Link to = {`${url}/leads`} style = {{margin: '10px', textDecoration: 'none',
+                    fontSize: '15px', textAlign: 'center'}}>Лиды</Link>
+                <Link to = {`${url}`} style = {{margin: '10px', textDecoration: 'none',
+                    fontSize: '15px', textAlign: 'center'}}>Заказы</Link>  
             </div>
-            
-            <div style = {{display: 'flex', flexDirection: 'column'}}>
-                <OrderComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot}/>
-                <LeadsComponent updatePlot = {updatePlot} goals = {goals} setGoals = {setGoals}/>
+
+            <div style = {{display: 'flex', flexDirection: 'column', width: '80%'}}>
+                <FilterRequestsComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot} />
+                <Switch>
+                    <Route exact path = {path}>
+                        <OrderComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot}/>
+                    </Route>
+                    <Route path = {`${path}/leads`}>
+                        <LeadsComponent updatePlot = {updatePlot} goals = {goals} setGoals = {setGoals}/>
+                    </Route>
+                    <Route path = {`${path}/options`}>
+                        <ProjectOptionsView goals = {goals} setGoals = {setGoals}/>
+                    </Route>
+                </Switch>
             </div>
         </div>
     )

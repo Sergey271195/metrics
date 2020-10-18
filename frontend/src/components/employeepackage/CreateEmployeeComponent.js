@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { PostFetch } from './Utils'
-import { EmployeeContext } from '../context/EmployeeContext'
+import { PostFetch } from '../Utils'
+import { EmployeeContext } from '../../context/EmployeeContext'
 
 const CreateEmployeeComponent = () => {
 

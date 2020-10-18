@@ -1,5 +1,5 @@
 import React from 'react'
-import { RounderN } from '../Utils'
+import { RounderN } from '../../Utils'
 
 const CompareComponent = ({dataFirstPart, dataSecondPart}) => {
 

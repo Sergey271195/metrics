@@ -4,26 +4,57 @@ import { ViewsContext } from '../../../context/ViewsContext'
 import { GETFetchAuthV, PostFetch } from '../../Utils'
 import { previousMonthSameDate, formatDate } from '../../Date'
 import Chart from 'chart.js';
-import { clearPlot, formatDatePeriods, aggregateData } from '../../PlotUtils'
+import { clearPlot, formatDatePeriods, aggregateData, trafficReducer, timeTrafficReducer, dataAggregator } from '../../PlotUtils'
 import { DataForPlotsContext } from '../../../context/DataForPlotsContext'
 
-const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
+const GoalsPredictionPlotComponent = ({currentGoal, updatePlot, traffic}) => {
 
     const { views } = useContext(ViewsContext)
-    const { token } = useContext(TokenContext)
 
     const {timePeriod: {
-        firstPeriod,
-        filterParam
+        firstPeriod
     }} = useContext(DataForPlotsContext)
 
-    const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
     const project = views.project.data
 
     const [ currentDataByDays, setCurrentDataByDays ] = useState()
+    const [ filteredCurrentData, setFilteredCurrentData ] = useState()
+
     const [ previousDataByDays, setPreviousDataByDays ] = useState()
+    const [ filteredPreviousData, setFilteredPreviousData ] = useState()
+
     const [ previousYearDataByDays, setPreviousYearDataByDays ] = useState()
+    const [ filteredPreviousYearData, setFilteredPreviousYearData ] = useState()
+
     const [ timePeriods, setTimePeriods ] = useState()
+
+    useEffect(() => {
+        if (!previousYearDataByDays) return
+        console.log('filtering')
+        const sources = trafficReducer(traffic)
+        console.log(sources)
+        if (sources.length == 8) {
+            console.log('Not filtering')
+            const filtered1 = dataAggregator(currentDataByDays.totals[0])
+            const filtered2 = dataAggregator(previousDataByDays.totals[0])
+            const filtered3 = dataAggregator(previousYearDataByDays.totals[0])
+            console.log(filtered1)
+            console.log(filtered2)
+            console.log(filtered3)
+            setFilteredCurrentData(filtered1)
+            setFilteredPreviousData(filtered2)
+            setFilteredPreviousYearData(filtered3)
+        }
+        else {
+            console.log('Actually filtering')
+            const filtered1 = dataAggregator(timeTrafficReducer(currentDataByDays.data, sources))
+            const filtered2 = dataAggregator(timeTrafficReducer(previousDataByDays.data, sources))
+            const filtered3 = dataAggregator(timeTrafficReducer(previousYearDataByDays.data, sources))
+            setFilteredCurrentData(filtered1)
+            setFilteredPreviousData(filtered2)
+            setFilteredPreviousYearData(filtered3)
+        }
+    }, [previousYearDataByDays, traffic])
 
     useEffect(() => {
         if (!currentGoal) return
@@ -32,77 +63,60 @@ const GoalsPredictionPlotComponent = ({currentGoal, updatePlot}) => {
             date1: firstPeriod.start,
             date2: firstPeriod.end,
             jandexid: project.webpage.jandexid,
-            traffic_source: filterParam.sourceTraffic,
             curr_goal_id: currentGoal.jandexid
         }
-        PostFetch('api/jandexdata/goals/reaches/bytime', data)
+        PostFetch('api/jandexdata/goals/reaches/day', data)
             .then(data => {
                 console.log('entry')
                 console.log(data)
-            })
-            .catch(error => console.log(error))
-    }, [currentGoal, updatePlot, filterParam])
-
-    useEffect(() => {
-    /* Current period */
-    if (!currentGoal) return
-GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:goal${currentGoal.jandexid}reaches
-&date1=${firstPeriod.start}
-&date2=${firstPeriod.end}`, token)
-        .then(response => response.json())
-            .then(data => {
-                console.log(data),
-                setCurrentDataByDays(aggregateData(data.data[0].metrics[0])),
+                setCurrentDataByDays(data)
                 setTimePeriods(formatDatePeriods(data.time_intervals))
-            })
-                .catch(error => console.log(error))
-
+            }).then(() => fetchPrev())
+            .catch(error => console.log(error))
     }, [currentGoal, updatePlot])
 
-    useEffect(() => {
-    /* Previous period */
-    if (!currentGoal) return
-GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:goal${currentGoal.jandexid}reaches
-&date1=${formatDate(previousMonthSameDate(new Date(firstPeriod.start)))}
-&date2=${formatDate(previousMonthSameDate(new Date(firstPeriod.end)))}`, token)
-        .then(response => response.json())
+    const fetchPrev = () => {
+        const data = {
+            date1: formatDate(previousMonthSameDate(new Date(firstPeriod.start))),
+            date2: formatDate(previousMonthSameDate(new Date(firstPeriod.end))),
+            jandexid: project.webpage.jandexid,
+            curr_goal_id: currentGoal.jandexid
+        }
+        PostFetch('api/jandexdata/goals/reaches/day', data)
             .then(data => {
-                console.log(data),
-                setPreviousDataByDays(aggregateData(data.data[0].metrics[0]))
-            })
-                .catch(error => console.log(error))
+                console.log('entry2')
+                console.log(data)
+                setPreviousDataByDays(data)
+            }).then(() => fetchPrevYear())
+            .catch(error => console.log(error))
+    }
 
-        }, [currentGoal, updatePlot])
+    const fetchPrevYear = () => {
+        const endDate = new Date(firstPeriod.end)
+        endDate.setFullYear(endDate.getFullYear()-1)
 
-        useEffect(() => {
-            /* Previous year */
-        
-            const endDate = new Date(firstPeriod.end)
-            endDate.setFullYear(endDate.getFullYear()-1)
+        const startDate = new Date(firstPeriod.start)
+        startDate.setFullYear(startDate.getFullYear()-1)
+        startDate.setDate(1)
 
-            const startDate = new Date(firstPeriod.start)
-            startDate.setFullYear(startDate.getFullYear()-1)
-            startDate.setDate(1)
-
-GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
-&metrics=ym:s:goal${currentGoal.jandexid}reaches
-&date1=${formatDate(startDate)}
-&date2=${formatDate(endDate)}`, token)
-        .then(response => response.json())
+        const data = {
+            date1: formatDate(startDate),
+            date2: formatDate(endDate),
+            jandexid: project.webpage.jandexid,
+            curr_goal_id: currentGoal.jandexid
+        }
+        PostFetch('api/jandexdata/goals/reaches/day', data)
             .then(data => {
-                console.log(data),
-                setPreviousYearDataByDays(aggregateData(data.data[0].metrics[0]))
+                console.log('entry3')
+                setPreviousYearDataByDays(data)
             })
-                .catch(error => console.log(error))
-    
-            }, [currentGoal, updatePlot])
+            .catch(error => console.log(error))
+        }
 
     useEffect(() => {
-        if (!currentDataByDays) return
+        /* if (!currentDataByDays) return
         if (!previousDataByDays) return
-        if (!timePeriods) return
+        if (!timePeriods) return */
         const ctx = clearPlot("GoalsPredictionPlot", "GoalsPredictionChartWrapper")
         new Chart(ctx, {
             type: 'line',
@@ -111,20 +125,20 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
                 responsive: true,
                 datasets: [{
                     label: 'Текущий период',
-                    data: currentDataByDays,
+                    data: filteredCurrentData,
                     fill: false,
                     borderColor:'rgb(75, 192, 192)',
                     lineTension:0.1,
                 },
                 {
                     label: 'Предыдущий период',
-                    data: previousDataByDays,
+                    data: filteredPreviousData,
                     fill: false,
                     borderColor:'rgb(192, 75, 192)',
                     lineTension:0.1,
                 },{
                     label: 'Предыдущий год',
-                    data: previousYearDataByDays,
+                    data: filteredPreviousYearData,
                     fill: false,
                     borderColor:'rgb(192, 192, 75)',
                     lineTension:0.1,
@@ -137,7 +151,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=day
                 }
             }
         });
-    }, [currentDataByDays, timePeriods, previousDataByDays, previousYearDataByDays])
+    }, [filteredCurrentData])
 
     return (
         <div className = 'GoalsPredictionChartWrapper' style = {{width: '600px', height: '250px'}}>

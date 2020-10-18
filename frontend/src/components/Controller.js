@@ -6,16 +6,13 @@ import {
     Link
   } from "react-router-dom";
 
-import { CurrentWebPageContext } from '../context/CurrentWebPageContext'
 import { TokenContext } from '../context/TokenContext'
-import { ViewsContext } from '../context/ViewsContext'
 import { GETFetch } from './Utils'
 import MainView from './views/MainView'
 import ProjectView from './views/ProjectView'
 import EmployeeView from './views/EmployeeView'
 import { EmployeeContext } from '../context/EmployeeContext';
 import ProjectListView from './views/ProjectListView';
-import ProjectOptionsView from './views/ProjectOptionsView';
 
 
 
@@ -53,7 +50,7 @@ const Controller = () => {
                 <Link to = "/project"><button>Проекты</button></Link>
             </nav>
 
-            <div style = {{display: 'flex'}}>
+            <div style = {{display: 'flex', width: '100%'}}>
                 <Switch>
                     <Route path = "/project/:id" children={<ProjectView />} />
                     <Route path = "/employee">

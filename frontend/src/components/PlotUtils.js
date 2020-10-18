@@ -24,37 +24,98 @@ export const aggregateData = (data) => {
     return aggregator == 0 ? [] : aggData
 }
 
+export const dataAggregator = (data) => {
+    return data.reduce((acc, item) => {
+        if (acc.length === 0) {
+            return [item]
+        }
+        else {
+            return [...acc, acc[acc.length-1] + item]
+        }  
+    }, [])
+}
+
 export const TrafficSources = [
     {
         id: 'organic',
-        name: 'Search engine traffic'
+        name: 'Search engine traffic',
+        show: true
     },
     {
         id: 'ad',
-        name: 'Add traffic'
+        name: 'Add traffic',
+        show: true
     },
     {
         id: 'direct',
-        name: 'Direct traffic'
+        name: 'Direct traffic',
+        show: true
     },
     {
         id: 'referral',
-        name: 'Link traffic'
+        name: 'Link traffic',
+        show: true
     },
     {
         id: 'social',
-        name: 'Soical network traffic'
+        name: 'Soical network traffic',
+        show: true
     },
     {
         id: 'internal',
-        name: 'Internal traffic'
+        name: 'Internal traffic',
+        show: true
     },
     {
         id: 'recommend',
-        name: 'Recommendation system traffic'
+        name: 'Recommendation system traffic',
+        show: true
     },
     {
         id: 'email',
-        name: 'Mailing traffic'
+        name: 'Mailing traffic',
+        show: true
     }
 ]
+
+export const trafficReducer = (traffic) => {
+    return traffic.filter(source => source.show).reduce((arr, source) => {
+        return [...arr, source.id]
+    }, [])
+}
+
+export const groupTrafficReducer = (arr, sources) => {
+    return arr.map(leads => leads.data.filter(source => 
+        sources.includes(source.dimensions[0].id))
+    ).map(source => {
+        return source.reduce((acc, src) => {
+            if (acc.length == 0) {
+                return src.metrics
+            }
+            else {
+                return (
+                    src.metrics.map((metric, index) => {
+                        return acc[index] + metric
+                    })
+                )
+            }
+            
+        }, [])
+    }).reduce((acc, subarray) => {
+        return [...acc, ...subarray]
+    }, [])
+}
+
+export const timeTrafficReducer = (arr, sources) => {
+    return arr.filter(src => sources.includes(src.dimensions[0].id))
+        .reduce((acc, item) => {
+            if (acc.length === 0) {
+                return item.metrics[0]
+            }
+            else {
+                return item.metrics[0].map((source, index) => {
+                    return acc[index] + source
+                })
+            }
+        }, [])
+}

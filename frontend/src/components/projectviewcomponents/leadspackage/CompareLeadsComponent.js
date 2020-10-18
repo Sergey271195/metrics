@@ -1,7 +1,7 @@
 import React from 'react'
 import { RounderN } from '../../Utils'
 
-const CompareLeadsComponent = ({goals, currentGoalsData, previousGoalsData}) => {
+const CompareLeadsComponent = ({goals, currentFilteredData, previousFilteredData}) => {
 
     const CountPercents = (num1, num2) => {
         if (num1 === num2 && num1 === 0) return `+ 0%`
@@ -11,14 +11,14 @@ const CompareLeadsComponent = ({goals, currentGoalsData, previousGoalsData}) => 
 
     return (
         <div>
-            {currentGoalsData && previousGoalsData && goals.map((item, index) => {
+            {currentFilteredData && previousFilteredData && goals.map((item, index) => {
                 return(
-                    <div key = {item.jandexid} style = {{border: '1px solid black'}}>
+                    <div key = {item.jandexid} style = {{border: '1px solid black', width: '50%'}}>
                         <div style = {{marginBottom: '5px', marginTop: '5px'}}>{index + 1}) {item.name}</div>
                         <div style = {{display: 'flex'}}>
-                            <div style = {{marginRight: '30px'}}>{currentGoalsData[index]}</div>
-                            <div style = {{marginRight: '30px'}}>{previousGoalsData[index]}</div>
-                            <div>{CountPercents(currentGoalsData[index], previousGoalsData[index])}</div>
+                            <div style = {{marginRight: '30px'}}>{currentFilteredData[index]}</div>
+                            <div style = {{marginRight: '30px'}}>{previousFilteredData[index]}</div>
+                            <div>{CountPercents(currentFilteredData[index], previousFilteredData[index])}</div>
                         </div>
                     </div>
                 )

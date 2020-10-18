@@ -1,6 +1,6 @@
 import React from 'react'
-import CreateEmployeeComponent from '../CreateEmployeeComponent'
-import EmployeeListComponent from '../mainviewpackage/EmployeeListComponent'
+import CreateEmployeeComponent from '../employeepackage/CreateEmployeeComponent'
+import EmployeeListComponent from '../employeepackage/EmployeeListComponent'
 
 const EmployeeView = () => {
     return(

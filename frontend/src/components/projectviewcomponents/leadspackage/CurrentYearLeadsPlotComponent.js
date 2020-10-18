@@ -1,35 +1,48 @@
 import React, {useState, useEffect, useContext} from 'react'
-import { TokenContext } from '../../../context/TokenContext'
 import { ViewsContext } from '../../../context/ViewsContext'
-import { GETFetchAuthV } from '../../Utils'
+import { PostFetch } from '../../Utils'
 import { getCurrentYearStart, formatDate, MONTH_DICTIONARY } from '../../Date'
 import Chart from 'chart.js';
-import { clearPlot } from '../../PlotUtils'
+import { clearPlot, timeTrafficReducer, trafficReducer, TrafficSources } from '../../PlotUtils'
 
-const CurrentYearLeadsPlotComponent = ({goals, currentGoal, setCurrentGoal}) => {
+const CurrentYearLeadsPlotComponent = ({goals, currentGoal, setCurrentGoal, traffic}) => {
 
     const { views } = useContext(ViewsContext)
-    const { token } = useContext(TokenContext)
-
-    const [ dataForTheYear, setDataForTheYear ] = useState([].fill(0, 0, 12))
+    const [ dataForTheYear, setDataForTheYear ] = useState()
+    const [ filteredData, setFilteredData ] = useState()
+    
     const currMonth = new Date().getMonth()
 
-    const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
     const project = views.project.data
 
     useEffect(() => {
-    if (!currentGoal) return
-GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
-&metrics=ym:s:goal${currentGoal.jandexid}reaches
-&date1=${formatDate(getCurrentYearStart())}
-&date2=${formatDate(new Date())}`, token)
-            .then(response => response.json())
-                .then(data => setDataForTheYear(data.data[0].metrics[0]))
-                    .catch(error => console.log(error))
-        }, [currentGoal])
+        if (!traffic) return 
+        if (!dataForTheYear) return
+        console.log('setting Filtered data')
+        const sources = trafficReducer(traffic)
+        setFilteredData(timeTrafficReducer(dataForTheYear, sources))
+    }, [dataForTheYear, traffic])
 
     useEffect(() => {
         if (!currentGoal) return
+
+        const data = {
+            date1: formatDate(getCurrentYearStart()),
+            date2: formatDate(new Date()),
+            jandexid: project.webpage.jandexid,
+            curr_goal_id: currentGoal.jandexid,
+        }
+        
+        PostFetch(`api/jandexdata/goals/reaches/month`, data)
+            .then(data => {
+                console.log('fetching Raw year data')
+                setDataForTheYear(data.data)
+            })
+    }, [currentGoal])
+
+    useEffect(() => {
+        if (!currentGoal) return
+        if (!filteredData) return
         const ctx = clearPlot("GoalsByMonthChart", "chartWrapperGoals")
         new Chart(ctx, {
             type: 'bar',
@@ -38,7 +51,7 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
                 responsive: true,
                 datasets: [{
                     label: currentGoal.name,
-                    data: dataForTheYear.slice(0, currMonth+1),
+                    data: filteredData.slice(0, currMonth+1),
                     borderWidth: 1
                 }]
             },
@@ -57,14 +70,14 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
                 }
             }
         });
-    }, [dataForTheYear])
+    }, [filteredData])
 
 
     return (
         <>
         {goals && <div style = {{marginBottom: '100px'}}>
         <div style = {{display: 'flex'}}>
-            <select onChange = {(event) => {console.log(event.target.value), setCurrentGoal(goals[event.target.value])}}>
+            <select onChange = {(event) => setCurrentGoal(goals[event.target.value])}>
                 {goals.map((goal, index) => {
                     return(
                         <option key = {goal.id} value = {index}>{goal.name}</option>
@@ -72,8 +85,10 @@ GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
                 })}
             </select>
         </div>
-        <div className = 'chartWrapperGoals' style = {{width: '600px', height: '250px'}}>
-            <canvas id = "GoalsByMonthChart" ></canvas>
+        <div style = {{display: 'flex'}}>
+            <div className = 'chartWrapperGoals' style = {{width: '600px', height: '250px'}}>
+                <canvas id = "GoalsByMonthChart" ></canvas>
+            </div>
         </div>
         </ div>}
         </>
