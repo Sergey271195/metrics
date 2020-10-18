@@ -10,7 +10,7 @@ METRIC_TOKEN = os.environ.get('METRIC_TOKEN')
 PIXEL_TOKEN = os.environ.get('PIXEL_TOKEN')
 
 def tokenview(request):
-    return JsonResponse({'token': METRIC_TOKEN})
+    return JsonResponse({'token': 'METRIC_TOKEN'})
 
 
 def refreshwebpages(request):

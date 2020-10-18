@@ -34,5 +34,6 @@ urlpatterns = [
 
     #Jandex connection
     path('jandexdata/goals/reaches', goals_reaches_view),
-    path('jandexdata/goals/reaches/bytime', goals_reaches_view),
+    path('jandexdata/goals/reaches/month', goals_reaches_view),
+    path('jandexdata/goals/reaches/day', goals_reaches_view),
 ]

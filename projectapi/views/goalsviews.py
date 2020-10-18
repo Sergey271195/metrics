@@ -26,7 +26,6 @@ def get_project_goals(request, pk):
     try:
         goals = Goal.objects.filter(project__jandexid = pk).filter(active = True)
         serializer = GoalSerializer(goals, many = True)
-        print(serializer.data)
         logging.info(f'[GET GOALS] successfully returning goals for Project {pk}')
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     except Exception as e:

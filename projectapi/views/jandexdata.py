@@ -9,6 +9,7 @@ import json
 import concurrent.futures
 import os
 import requests
+import math
 
 logging.basicConfig(level=logging.INFO)
 
@@ -30,13 +31,29 @@ def fetch(url):
         return None
 
 
+""" Вспомогательная функция для разделения массива на массивы по number элементов
+"""
+def array_split(arr, num):
+    length = len(arr)
+    result = []
+    if length > num:
+        count = math.ceil(length/num)
+        n = 0
+        while n < count-1:
+            result.append(arr[num*n:num*(n+1)])
+            n+=1
+        result.append(arr[num*n:])
+        return result
+    return [arr]
+
+
 
 """ Возвращает данные по числу завершения целей в формате JSON после Яндекс Метрики
     Аргументы, передаваемые в теле запроса:
     - date1 - дата начала периода, за который осуществляется запрос
     - date2 - дата конца периода, за который осуществляется запрос
-    - traffic_source - источник траффика (необязательный, возможно список //check)
     - jandexid - id проекта в Яндекс Метрике
+    - curr_goal_id - id цели (лида) в Яндекс Метрике (если запрос осуществляется по времени //month //day)
     Используетя модуль threading
 """
 
@@ -50,62 +67,38 @@ def goals_reaches_view(request):
         jandexid = int(request_body.get('jandexid'))
         date1 = request_body.get('date1')
         date2 = request_body.get('date2')
-        traffic_source = request_body.get('traffic_source')
         curr_goal_id = request_body.get('curr_goal_id') ## Used for getting info by time
-
-        if traffic_source and traffic_source != 'all':
-            logging.warning(f'[Threads goals reaches request] traffic source provided')
-            filter_string = f"&filters=ym:s:<attribution>TrafficSource=.('{traffic_source}')"
 
         ## В случае запроса по всем целям
         ## Возвращается число выполнений каждой цели
         ## в зависимости от периода времени и источника трафика
+        ## max_number определяет максимальное число метрик в запросе (согласно Яндекс Метрики - 20)
+        max_number = 15
         if request.path == '/api/jandexdata/goals/reaches':
+            goals_ids = [('ym:s:goal'+str(goal.jandexid)+ 'reaches') for goal in 
+                Goal.objects.filter(project__jandexid = jandexid).filter(active = True)]
+            goals_splitted = array_split(goals_ids, max_number)
+            goals_strings = [','.join(goals_id) for goals_id in goals_splitted]
             with concurrent.futures.ThreadPoolExecutor() as executor:
-                goals_ids = [goal.jandexid for goal in Goal.objects.filter(project__jandexid = jandexid)]
-                urls = [(f"{JANDEX_STAT}id={jandexid}&metrics=ym:s:goal{goal_id}reaches&date1={date1}&date2={date2}\
-&dimensions=ym:s:<attribution>TrafficSource" + filter_string) for goal_id in goals_ids]
+                urls = [(f"{JANDEX_STAT}id={jandexid}&metrics={goals_string}&date1={date1}&date2={date2}\
+&dimensions=ym:s:<attribution>TrafficSource") for goals_string in goals_strings]
                 result = list(executor.map(fetch, urls))
-                print([res.get('totals') for res in result])
                 logging.warning(f'[Threads goals reaches request] returning requested data')
                 return JsonResponse(result, safe = False)
 
         ## В случае запроса по времени запрос идет по конкретной цели (curr_goal_id)
         ## Возвращается число выполнений данной цели в конкретный день
         ## Для построения графика требуется  аггрегация данных
-        else:
-            url = f"{JANDEX_STAT_BY_TIME}id={jandexid}&group=day&metrics=ym:s:goal{curr_goal_id}reaches&date1={date1}&date2={date2}\
-&dimensions=ym:s:<attribution>TrafficSource" + filter_string
+        elif request.path == '/api/jandexdata/goals/reaches/month':
+            url = f"{JANDEX_STAT_BY_TIME}id={jandexid}&group=month&metrics=ym:s:goal{curr_goal_id}reaches&date1={date1}&date2={date2}\
+&dimensions=ym:s:<attribution>TrafficSource"
             result = fetch(url)
-            print(result)
-            logging.warning(f'[Threads goals reaches bytime request] returning requested data')
+            logging.warning(f'[Threads goals reaches by month request] returning requested data')
             return JsonResponse(result, safe = False)
 
-
-
-""" 
-Перешли на сайт
-3924
-5293
-- 25.86%
-Добавление в корзину (unique)
-20
-24
-- 16.67%
-Добавлено в корзину
--1183
--145
-- -715.86%
-Заказы
-23
-31
-- 25.81%
-Общая сумма заказов
-486400
-952470
-- 48.93%
-Средний чек
-21147.83
-30724.84
-- 31.17%
-"""
+        elif request.path == '/api/jandexdata/goals/reaches/day':
+            url = f"{JANDEX_STAT_BY_TIME}id={jandexid}&group=day&metrics=ym:s:goal{curr_goal_id}reaches&date1={date1}&date2={date2}\
+&dimensions=ym:s:<attribution>TrafficSource"
+            result = fetch(url)
+            logging.warning(f'[Threads goals reaches by day request] returning requested data')
+            return JsonResponse(result, safe = False)

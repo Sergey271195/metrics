@@ -112,5 +112,6 @@ backup/
 bitrix/
 utils/
 metrics/
+frontend/static/main.js
 pix.py
 asynctest.py
