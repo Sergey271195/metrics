@@ -2,12 +2,12 @@ import React, { useEffect } from 'react'
 import Chart from 'chart.js';
 import { clearPlot } from '../../PlotUtils';
 
-const OrderPlotComponent = ({dataFirstPart}) => {
+const OrderPlotComponent = ({currentFilteredData}) => {
 
     const ORDER_DICTIONARY = ['Перешли на сайт', 'Добавление в корзину (unique)', "Добавлено в корзину", "Заказы", "Общая сумма заказов", "Средний чек"]
 
     useEffect(() => {
-        if (!dataFirstPart) return
+        if (!currentFilteredData) return
         const ctx = clearPlot("OrderChart", "OrderChartWrapper")
         new Chart(ctx, {
             type: 'horizontalBar',
@@ -16,7 +16,7 @@ const OrderPlotComponent = ({dataFirstPart}) => {
                 responsive: true,
                 datasets: [{
                     label: 'Статистика по заказам',
-                    data: dataFirstPart.slice(1, 4),
+                    data: currentFilteredData.slice(1, 4),
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -49,7 +49,7 @@ const OrderPlotComponent = ({dataFirstPart}) => {
                 }
             }
         });
-    }, [dataFirstPart])
+    }, [currentFilteredData])
 
 
     return (

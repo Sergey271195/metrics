@@ -1,80 +1,103 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { TokenContext } from '../../../context/TokenContext'
 import { ViewsContext } from '../../../context/ViewsContext'
-import { GETFetchAuthV } from '../../Utils'
+import { PostFetch } from '../../Utils'
 import { getCurrentYearStart, formatDate, MONTH_DICTIONARY } from '../../Date'
 import Chart from 'chart.js';
-import { clearPlot } from '../../PlotUtils'
+import { clearPlot, trafficReducer } from '../../PlotUtils'
 
-const CurrentYearOrderPlotComponent = () => {
+const CurrentYearOrderPlotComponent = ({traffic}) => {
 
     const [plotType, setPlotType] = useState('Purchases')
+    const [ dataForTheYear, setDataForTheYear ] = useState()
+    const [ filteredData, setFilteredData ] = useState()
 
     const plotTypeDict = {
         'Purchases': {
+            id: 0,
             label: 'Количество',
             request: 'ym:s:ecommercePurchases'
         },
         'TotalSum': {
+            id: 1,
             label: 'Общая сумма',
             request: 'ym:s:ecommerceRevenue'
         },
         'SumPerPurchase': {
+            id: 2,
             label: 'Средний чек',
             request: 'ym:s:ecommerceRevenuePerPurchase'
         }
     }
 
     const { views } = useContext(ViewsContext)
-    const { token } = useContext(TokenContext)
 
-    const [ dataForTheYear, setDataForTheYear ] = useState([].fill(0, 0, 12))
+    
     const currMonth = new Date().getMonth()
 
-    const JandexStatByTime = 'https://api-metrika.yandex.net/stat/v1/data/bytime?'
     const project = views.project.data
 
     useEffect(() => {
+        if (!dataForTheYear) return
+        const sources = trafficReducer(traffic)
+        const plotIndex = plotTypeDict[plotType].id
+        if (sources.length == 8) {
+            setFilteredData(dataForTheYear.totals[plotIndex])
+        }
+        else {
+            setFilteredData(dataForTheYear.data.filter(item => sources.includes(item.dimensions[0].id))
+                .reduce((acc, entry) => {
+                    if (acc.length === 0) {
+                        return entry.metrics[plotIndex]
+                    }
+                    else {
+                        return entry.metrics[plotIndex].map((it, index) => {
+                            return acc[index] + it
+                        })
+                    }
+                }, []))
+        }
+    }, [traffic, plotType, dataForTheYear])
 
-GETFetchAuthV(`${JandexStatByTime}id=${project.webpage.jandexid}&group=month
-&metrics=${plotTypeDict[plotType].request}
-&date1=${formatDate(getCurrentYearStart())}
-&date2=${formatDate(new Date())}`, token)
-            .then(response => response.json())
-                .then(data => setDataForTheYear(data.data[0].metrics[0]))
-                    .catch(error => console.log(error))
-        }, [plotType])
-
+    useEffect(() => {
+        PostFetch('api/jandexdata/tasks/year', {
+            date1: formatDate(getCurrentYearStart()),
+            date2: formatDate(new Date()),
+            jandexid: project.webpage.jandexid,
+        })
+            .then(data => {
+                setDataForTheYear(data)})
+    }, [views.project.data])
 
         useEffect(() => {
-                const ctx = clearPlot("OdersByMonthChart", "OrdersByMonthChartWrapper")
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: MONTH_DICTIONARY.slice(0, currMonth+1),
-                        responsive: true,
-                        datasets: [{
-                            label: plotTypeDict[plotType].label,
-                            data: dataForTheYear.slice(0, currMonth+1),
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }],
-                            xAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }],
-                        }
+            if (!filteredData) return
+            const ctx = clearPlot("OdersByMonthChart", "OrdersByMonthChartWrapper")
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: MONTH_DICTIONARY.slice(0, currMonth+1),
+                    responsive: true,
+                    datasets: [{
+                        label: plotTypeDict[plotType].label,
+                        data: filteredData.slice(0, currMonth+1),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }],
                     }
-                });
-            }, [dataForTheYear])
+                }
+            });
+        }, [filteredData])
 
 
     return (

@@ -59,7 +59,7 @@ def array_split(arr, num):
 
 @csrf_exempt
 def goals_reaches_view(request):
-    print(request.path)
+
     if request.method == 'POST':
         logging.warning(f'[Threads goals reaches request] POST')
         filter_string = ''
@@ -102,3 +102,55 @@ def goals_reaches_view(request):
             result = fetch(url)
             logging.warning(f'[Threads goals reaches by day request] returning requested data')
             return JsonResponse(result, safe = False)
+
+
+""" Возвращает общие данные по числу визитов, среднему доходу, доходу с посещения ...
+    Аргументы, передаваемые в теле запроса:
+    - date1 - дата начала периода, за который осуществляется запрос
+    - date2 - дата конца периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def tasks_general_view(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Tasks general info] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1 = request_body.get('date1')
+        date2 = request_body.get('date2')
+
+        url = f"{JANDEX_STAT}id={jandexid}&metrics=ym:s:visits&metrics=ym:s:productBasketsUniq\
+&metrics=ym:s:productBasketsQuantity&metrics=ym:s:ecommercePurchases&metrics=ym:s:ecommerceRevenue\
+&metrics=ym:s:ecommerceRevenuePerPurchase&date1={date1}&date2={date2}\
+&dimensions=ym:s:<attribution>TrafficSource"
+        result = fetch(url)
+        logging.warning(f'[Threads goals reaches by month request] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" Возвращает общие данные по числу визитов, среднему доходу, доходу с посещения ...
+    Аргументы, передаваемые в теле запроса:
+    - date1 - дата начала периода, за который осуществляется запрос
+    - date2 - дата конца периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def tasks_year_view(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Tasks general info] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1 = request_body.get('date1')
+        date2 = request_body.get('date2')
+
+        url = f"{JANDEX_STAT_BY_TIME}id={jandexid}&metrics=ym:s:ecommercePurchases&metrics=ym:s:ecommerceRevenue\
+&metrics=ym:s:ecommerceRevenuePerPurchase&date1={date1}&date2={date2}&group=month\
+&dimensions=ym:s:<attribution>TrafficSource"
+        result = fetch(url)
+        logging.warning(f'[Threads goals reaches by month request] returning requested data')
+        return JsonResponse(result, safe = False)
+
