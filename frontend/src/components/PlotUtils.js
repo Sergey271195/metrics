@@ -25,6 +25,7 @@ export const aggregateData = (data) => {
 }
 
 export const dataAggregator = (data) => {
+    if (!data) return [0]
     return data.reduce((acc, item) => {
         if (acc.length === 0) {
             return [item]
@@ -118,4 +119,33 @@ export const timeTrafficReducer = (arr, sources) => {
                 })
             }
         }, [])
+}
+
+
+export const allDataRedcuer = (data, sources) => {
+    return data.map(batch => batch.data.filter(entry => 
+        sources.includes(entry.dimensions[0].id)).reduce((acc, item) => {
+            if (acc.length === 0) {
+                return item.metrics
+            }
+            return item.metrics.map((goal, index) => {
+                return goal.map((data, inner_index) => {
+                    return acc[index][inner_index] + data
+                    })
+                })
+            }, [])
+        ).reduce((acc, item) => {
+            return [...acc, ...item]
+        }, [])
+}
+
+export const allDataAggregator = (data) => {
+    return data.reduce((acc, item) => {
+        if (acc.length === 0) {
+            return item
+        }
+        return item.map((data, index) => {
+            return acc[index] + data
+        })
+    }, [])
 }

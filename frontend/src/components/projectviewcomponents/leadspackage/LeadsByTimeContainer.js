@@ -6,28 +6,21 @@ import GoalsPredictionPlotComponent from './GoalsPredictionPlotComponent'
 
 const LeadsByTimeContainer = ({goals, updatePlot}) => {
 
-    const [ currentGoal, setCurrentGoal ] = useState()
+    const [ currentGoalIndex, setCurrentGoalIndex ] = useState(-1)
     const [ traffic, setTraffic ] = useState(TrafficSources)
-
-    useEffect(() => {
-        if (!goals) return
-        console.log(goals)
-        setCurrentGoal(goals[0])
-    }, [goals])
 
     return (
         <>  
             <h1>Лиды по месяцам</h1>
-            {currentGoal && 
             <div style = {{display: 'flex'}}>
-                <CurrentYearLeadsPlotComponent 
-                    goals = {goals} currentGoal = {currentGoal} setCurrentGoal = {setCurrentGoal} traffic = {traffic}/>
+                <CurrentYearLeadsPlotComponent currentGoalIndex = {currentGoalIndex}
+                    goals = {goals} setCurrentGoalIndex = {setCurrentGoalIndex} traffic = {traffic}/>
                 <TrafficSourceCheckboxComponent traffic = {traffic} setTraffic = {setTraffic}/>
-            </div>}
+            </div>
             <div>
                 <h1>Прогноз по лидам (//TODO)</h1>
-                {currentGoal &&  <GoalsPredictionPlotComponent currentGoal = {currentGoal}
-                    updatePlot = {updatePlot} traffic = {traffic}/>}
+                <GoalsPredictionPlotComponent goals = {goals} currentGoalIndex = {currentGoalIndex}
+                    updatePlot = {updatePlot} traffic = {traffic}/>
             </div>
         </>
     )

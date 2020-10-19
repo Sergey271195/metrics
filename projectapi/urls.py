@@ -5,7 +5,7 @@ from .views import (tokenview, get_employee_view,
                      create_project_view, get_project_view, delete_project_view,
                      add_user_to_project_view, get_project_by_id_view,
                      get_project_goals, disable_goal, enable_goal, get_project_goals_all,
-                     goals_reaches_view, tasks_general_view, tasks_year_view
+                     goals_reaches_view, tasks_general_view, tasks_year_view, all_goals_reaches_view
                     )
 
 urlpatterns = [
@@ -33,9 +33,13 @@ urlpatterns = [
     path('goals/enable/<int:pk>', enable_goal),
 
     #Jandex connection
-    path('jandexdata/goals/reaches', goals_reaches_view),
     path('jandexdata/goals/reaches/month', goals_reaches_view),
     path('jandexdata/goals/reaches/day', goals_reaches_view),
+
+    path('jandexdata/goals/reaches/all', all_goals_reaches_view),
+    path('jandexdata/goals/reaches/month/all', all_goals_reaches_view),
+    path('jandexdata/goals/reaches/day/all', all_goals_reaches_view),
+
 
     path('jandexdata/tasks/general', tasks_general_view),
     path('jandexdata/tasks/year', tasks_year_view),

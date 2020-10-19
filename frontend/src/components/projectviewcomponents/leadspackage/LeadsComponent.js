@@ -38,7 +38,7 @@ const LeadsComponent = ({updatePlot, goals, setGoals}) => {
             date2: firstPeriod.end,
             jandexid: project.webpage.jandexid
         }
-        PostFetch('api/jandexdata/goals/reaches', data)
+        PostFetch('api/jandexdata/goals/reaches/all', data)
             .then(data => {
                 setCurrentGoalsData(data)
             }).then(setTimeout(fetchSecondHalf, 1000))
@@ -55,7 +55,7 @@ const LeadsComponent = ({updatePlot, goals, setGoals}) => {
             date2: secondPeriod.end,
             jandexid: project.webpage.jandexid
         }
-        PostFetch('api/jandexdata/goals/reaches', data)
+        PostFetch('api/jandexdata/goals/reaches/all', data)
             .then(data => {
                 setPreviousGoalsData(data)
             })
