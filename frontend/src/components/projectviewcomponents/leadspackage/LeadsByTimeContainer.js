@@ -11,6 +11,7 @@ const LeadsByTimeContainer = ({goals, updatePlot}) => {
 
     useEffect(() => {
         if (!goals) return
+        console.log(goals)
         setCurrentGoal(goals[0])
     }, [goals])
 

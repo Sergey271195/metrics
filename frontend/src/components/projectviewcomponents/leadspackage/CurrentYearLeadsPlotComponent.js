@@ -15,6 +15,10 @@ const CurrentYearLeadsPlotComponent = ({goals, currentGoal, setCurrentGoal, traf
 
     const project = views.project.data
 
+    const changeGoal = (event) => {
+        
+    }
+
     useEffect(() => {
         if (!traffic) return 
         if (!dataForTheYear) return
@@ -78,6 +82,7 @@ const CurrentYearLeadsPlotComponent = ({goals, currentGoal, setCurrentGoal, traf
         {goals && <div style = {{marginBottom: '100px'}}>
         <div style = {{display: 'flex'}}>
             <select onChange = {(event) => setCurrentGoal(goals[event.target.value])}>
+                <option value = {-1}>Все</option>
                 {goals.map((goal, index) => {
                     return(
                         <option key = {goal.id} value = {index}>{goal.name}</option>
