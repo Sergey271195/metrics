@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { DataForPlotsContext } from '../../../context/DataForPlotsContext'
 import { ViewsContext } from '../../../context/ViewsContext'
-import { timeTrafficReducer, trafficReducer, TrafficSources } from '../../PlotUtils'
+import { trafficReducer, TrafficSources } from '../../PlotUtils'
 import { PostFetch } from '../../Utils'
 import TrafficSourceCheckboxComponent from '../projectutilspackage/TrafficSourceCheckboxComponent'
 import CompareComponent from './CompareComponent'
@@ -73,7 +73,6 @@ const OrderPlotCompareContainer = ({updatePlot}) => {
             jandexid: project.webpage.jandexid,
         })
             .then(data => {
-                console.log(data)
                 setDataFirstPart(data)})
 
         PostFetch('api/jandexdata/tasks/general', {

@@ -80,8 +80,6 @@ const CurrentYearLeadsPlotComponent = ({goals, currentGoalIndex, setCurrentGoalI
         {goals && <div style = {{marginBottom: '100px'}}>
         <div style = {{display: 'flex'}}>
             <select onChange = {(event) => {
-                console.log('Option')
-                console.log(event.target.value)
                 setCurrentGoalIndex(event.target.value)
             }}>
                 <option value = {-1}>Все</option>

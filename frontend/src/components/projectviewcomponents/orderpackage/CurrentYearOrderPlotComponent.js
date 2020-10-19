@@ -3,31 +3,12 @@ import { ViewsContext } from '../../../context/ViewsContext'
 import { PostFetch } from '../../Utils'
 import { getCurrentYearStart, formatDate, MONTH_DICTIONARY } from '../../Date'
 import Chart from 'chart.js';
-import { clearPlot, trafficReducer } from '../../PlotUtils'
+import { clearPlot, trafficReducer, plotTypeDict } from '../../PlotUtils'
 
-const CurrentYearOrderPlotComponent = ({traffic}) => {
+const CurrentYearOrderPlotComponent = ({traffic, plotType, setPlotType}) => {
 
-    const [plotType, setPlotType] = useState('Purchases')
     const [ dataForTheYear, setDataForTheYear ] = useState()
     const [ filteredData, setFilteredData ] = useState()
-
-    const plotTypeDict = {
-        'Purchases': {
-            id: 0,
-            label: 'Количество',
-            request: 'ym:s:ecommercePurchases'
-        },
-        'TotalSum': {
-            id: 1,
-            label: 'Общая сумма',
-            request: 'ym:s:ecommerceRevenue'
-        },
-        'SumPerPurchase': {
-            id: 2,
-            label: 'Средний чек',
-            request: 'ym:s:ecommerceRevenuePerPurchase'
-        }
-    }
 
     const { views } = useContext(ViewsContext)
 

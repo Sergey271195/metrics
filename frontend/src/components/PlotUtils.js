@@ -149,3 +149,35 @@ export const allDataAggregator = (data) => {
         })
     }, [])
 }
+
+export const plotTypeDict = {
+    'Purchases': {
+        id: 0,
+        label: 'Количество',
+        request: 'ym:s:ecommercePurchases'
+    },
+    'TotalSum': {
+        id: 1,
+        label: 'Общая сумма',
+        request: 'ym:s:ecommerceRevenue'
+    },
+    'SumPerPurchase': {
+        id: 2,
+        label: 'Средний чек',
+        request: 'ym:s:ecommerceRevenuePerPurchase'
+    }
+}
+
+export const allDataRedcuerLight = (data, sources) => {
+    return data.data.filter(entry => 
+        sources.includes(entry.dimensions[0].id)).reduce((acc, item) => {
+            if (acc.length === 0) {
+                return item.metrics
+            }
+            return item.metrics.map((goal, index) => {
+                return goal.map((data, inner_index) => {
+                    return acc[index][inner_index] + data
+                    })
+                })
+            }, [])
+}
