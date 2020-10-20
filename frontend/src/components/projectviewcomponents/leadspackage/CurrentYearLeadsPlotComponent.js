@@ -46,6 +46,7 @@ const CurrentYearLeadsPlotComponent = ({goals, currentGoalIndex, setCurrentGoalI
     useEffect(() => {
         if (!filteredData) return
         const ctx = clearPlot("GoalsByMonthChart", "chartWrapperGoals")
+        if (!ctx) return
         new Chart(ctx, {
             type: 'bar',
             data: {

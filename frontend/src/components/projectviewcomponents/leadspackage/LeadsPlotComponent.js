@@ -10,6 +10,7 @@ const LeadsPlotComponent = ({goals, currentFilteredData}) => {
             return goal.name
         })
         const ctx = clearPlot("LeadsPlotComponent", "LeadsChartWrapper")
+        if (!ctx) return
         new Chart(ctx, {
             type: 'horizontalBar',
             data: {

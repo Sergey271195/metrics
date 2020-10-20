@@ -95,6 +95,7 @@ const GoalsPredictionPlotComponent = ({goals, updatePlot, traffic, currentGoalIn
 
     useEffect(() => {
         const ctx = clearPlot("GoalsPredictionPlot", "GoalsPredictionChartWrapper")
+        if (!ctx) return
         new Chart(ctx, {
             type: 'line',
             data: {
