@@ -1,0 +1,12 @@
+utils/
+metrics/
+.git
+frontend/static/main.js
+node/node_modules/
+node_modules/
+__pycache__/
+main.log
+db.sqlite3
+Procfile
+Dockerfile
+docker-compose.yml

@@ -1,3 +1,13 @@
+
+node_modules/
+static/templates
+utils/
+metrics/
+static/main.js
+logs/*
+.env.db
+.env.web
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -105,13 +115,3 @@ ENV/
 media/
 *.pyc
 *.db
-
-node_modules/
-static/templates
-backup/
-bitrix/
-utils/
-metrics/
-frontend/static/main.js
-pix.py
-asynctest.py
