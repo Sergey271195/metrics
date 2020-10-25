@@ -1,19 +1,73 @@
 .trafficTablePercentsUp {
     font-style: normal;
     font-weight: normal;
-    font-size: 15px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     color: #169D00;
-    margin-left: 5px
+    margin-left: 10px
 }
 
 .trafficTablePercentsDown {
     font-style: normal;
     font-weight: normal;
-    font-size: 15px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     color: #F82626;
-    margin-left: 5px
+    margin-left: 10px
+}
+
+.tableHead {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    background: #F2F2F2;
+    border-radius: 10px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: #1F1F1F;
+    margin-bottom: 15px;
+}
+
+.tableRow {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tableCell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #000000;
+    margin-bottom: 5px;
+}
+
+.firstTableCellSub {
+    flex: 2;
+    text-indent: 50px;
+}
+
+.firstTableCellMain {
+    flex: 2;
+    display: flex;
+    align-items: center;
+}
+
+.trafficTableTitle {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 25px;
+    color: #1F1F1F;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }

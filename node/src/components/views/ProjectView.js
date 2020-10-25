@@ -16,6 +16,7 @@ import FilterRequestsComponent from '../projectviewcomponents/projectutilspackag
 import MainInfoComponent from '../projectviewcomponents/maininfopackage/MainInfoComponent'
 import FunnelComponent from '../projectviewcomponents/funnelpackage/FunnelComponent'
 import TrafficTable from '../projectviewcomponents/traffictablepackage/TrafficTable';
+import OrderPredictionPlotContainer from '../projectviewcomponents/orderpackage/OrderPredictionPlotContainer';
 
 
 const ProjectView = () => {
@@ -67,11 +68,9 @@ const ProjectView = () => {
                 <MainInfoComponent />
                 <FilterRequestsComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot} />
                 {/* <FunnelComponent updatePlot = {updatePlot}/> */}
-                <TrafficTable updatePlot = {updatePlot}/>
+                {/* <TrafficTable updatePlot = {updatePlot}/> */}
+                <OrderPredictionPlotContainer updatePlot = {updatePlot} />
                 <Switch>
-                    <Route exact path = {path}>
-                        {/* <OrderComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot}/> */}
-                    </Route>
                     <Route path = {`${path}/leads`}>
                         <LeadsComponent updatePlot = {updatePlot} goals = {goals} setGoals = {setGoals}/>
                     </Route>

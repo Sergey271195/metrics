@@ -4,7 +4,20 @@ import { PostFetch } from '../../Utils'
 import {previousMonthSameDate, formatDate} from '../../Date'
 import Chart from 'chart.js';
 import { DataForPlotsContext } from '../../../context/DataForPlotsContext'
-import { clearPlot, dataAggregator, plotTypeDict, allDataRedcuerLight, trafficReducer } from '../../PlotUtils'
+import { clearPlot, dataAggregator, plotTypeDict, allDataRedcuerLight, trafficReducer, RussMonthDict } from '../../PlotUtils'
+import BoxComponent from '../../utilcomponents/BoxComponent';
+
+Chart.defaults.global.defaultFontFamily = "FuturaPT"
+Chart.defaults.global.legend.display = false
+
+const formatToRussMonth = (data) => {
+    return data.map(date => {
+        const dt = new Date(date)
+        const day = dt.getDate()
+        const month = RussMonthDict[dt.getMonth()+1]
+        return `${day} ${month}`
+    })
+}
 
 const PredictionPlot = ({updatePlot, plotType, traffic}) => {
 
@@ -87,45 +100,97 @@ const PredictionPlot = ({updatePlot, plotType, traffic}) => {
         if (!filteredCurrentDataByDays) return
         if (!timePeriods) return
         const ctx = clearPlot("PredictionPlot", "PredictionChartWrapper")
+
+        var bar_ctx = ctx.getContext('2d');
+        var background_1 = bar_ctx.createLinearGradient(0, 0, 0, 300);
+        background_1.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+        background_1.addColorStop(0, 'rgba(20, 255, 0, 0.5)');
+
+        var background_2 = bar_ctx.createLinearGradient(0, 0, 0, 300);
+        background_2.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+        background_2.addColorStop(0, 'rgba(255, 208, 0, 0.5)');
+
+        var background_3 = bar_ctx.createLinearGradient(0, 0, 0, 300);
+        background_3.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+        background_3.addColorStop(0, 'rgba(255, 46, 0, 0.5)');
+        
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: timePeriods,
-                responsive: true,
+                labels: formatToRussMonth(timePeriods),
                 datasets: [{
                     label: 'Текущий период',
                     data: filteredCurrentDataByDays,
-                    fill: false,
-                    borderColor:'rgb(75, 192, 192)',
+                    fill: true,
+                    backgroundColor: background_1,
+                    borderColor:'#1A9F1F',
                     lineTension:0.1,
                 },
                 {
                     label: 'Предыдущий период',
                     data: filteredPreviousDataByDays,
-                    fill: false,
-                    borderColor:'rgb(192, 75, 192)',
+                    fill: true,
+                    borderColor:'#FDD835',
+                    backgroundColor: background_2,
                     lineTension:0.1,
                 },{
                     label: 'Предыдущий год',
                     data: filteredPreviousYearDataByDays,
-                    fill: false,
-                    borderColor:'rgb(192, 192, 75)',
+                    fill: true,
+                    borderColor:'#FF0000',
+                    backgroundColor: background_3,
                     lineTension:0.1,
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: {
+                    point: {
+                        radius: 0
+                    },
+                    line: {
+                        cubicInterpolationMode: true,
+                    }
+                },
                 title: {
                     display: true,
                     text: plotTypeDict[plotType].label
+                },
+                scales: {
+                    ticks: {
+                        
+                    },
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: "#1F1F1F",
+                        },
+                        gridLines: {
+                            borderDash: [8, 30]
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: "#1F1F1F",
+                        },
+                        gridLines: {
+                            display: true,
+                            drawBorder: false
+                        }
+                    }],
                 }
             }
         });
     }, [filteredPreviousYearDataByDays, filteredCurrentDataByDays, filteredPreviousDataByDays])
 
     return (
-        <div className = 'PredictionChartWrapper' style = {{width: '600px', height: '250px'}}>
-            <canvas id = "PredictionPlot" ></canvas>
-        </div>
+        <BoxComponent size = {{padding: '30px', height: '300px', width: '92%', marginBottom: '50px'}}>
+            <div className = 'PredictionChartWrapper' style = {{width: '100%', height: '300px'}}>
+                <canvas id = "PredictionPlot" ></canvas>
+            </div>
+        </BoxComponent>
     )
 }
 

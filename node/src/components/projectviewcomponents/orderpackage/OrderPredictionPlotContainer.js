@@ -19,7 +19,7 @@ const OrderPredictionPlotContainer = ({updatePlot}) => {
                     <TrafficSourceCheckboxComponent traffic = {traffic} setTraffic = {setTraffic}/>
             </div>
             
-            <h1>Прогноз по заказам (//TODO)</h1>
+            <div className = 'comapreByMonthTitle'>Прогноз по выручке на (//TODO)</div>
             <PredictionPlot updatePlot = {updatePlot} traffic = {traffic} plotType = {plotType}/>
         </div>
     )

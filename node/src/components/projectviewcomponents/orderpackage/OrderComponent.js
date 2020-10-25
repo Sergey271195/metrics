@@ -7,7 +7,7 @@ const OrderComponent = ({updatePlot}) => {
 
     return(
         <div style = {{display: 'flex', flexDirection: 'column'}}>
-            {/* <OrderPlotCompareContainer updatePlot = {updatePlot} /> */}
+            <OrderPlotCompareContainer updatePlot = {updatePlot} />
             <OrderPredictionPlotContainer updatePlot = {updatePlot} />
         </div>
     )

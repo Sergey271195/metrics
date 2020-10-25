@@ -9,6 +9,7 @@ import BoxComponent from '../../utilcomponents/BoxComponent';
 Chart.defaults.global.defaultFontFamily = "FuturaPT"
 Chart.defaults.global.legend.display = false
 
+
 const CurrentYearOrderPlotComponent = ({traffic, plotType, setPlotType}) => {
 
     const [ dataForTheYear, setDataForTheYear ] = useState()
