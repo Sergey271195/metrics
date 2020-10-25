@@ -5,6 +5,7 @@ import { ViewsContext } from '../../../context/ViewsContext'
 import { PostFetch, RounderN } from '../../Utils'
 
 import '../../../styles/TrafficTable.css'
+import SourceTemplateComponent from './SourceTemplateComponent'
 
 const CountPercents = (num1, num2) => {
     if (!num1 || !num2) return <></>
@@ -16,6 +17,14 @@ const CountPercents = (num1, num2) => {
     : <div className = 'trafficTablePercentsDown'><IoMdArrowDropdown /> {String(RounderN((100 - 100*(num1/num2)), 1)) + '%'}</div>
 }
 
+const TrafficTitles = {
+    'direct': 'Прямые заходы',
+    'internal': "Внутренние переходы",
+    'recommend': "Рекомендательные системы",
+    'email': "Переходы с почтовых рассылок" 
+
+}
+
 const TrafficTable = ({updatePlot}) => {
 
     const { views } = useContext(ViewsContext)
@@ -25,8 +34,6 @@ const TrafficTable = ({updatePlot}) => {
 
     const project = views.project.data
 
-    const [ searchEngineData, setSearchEngineData ] = useState()
-    const [ socialNetworkData, setSocialNetworkData ] = useState()
     const [ allSourcesData, setAllSourcesData ] = useState()
 
     useEffect(() => {
@@ -45,41 +52,10 @@ const TrafficTable = ({updatePlot}) => {
     }, [updatePlot])
     
 
-    useEffect(() => {
-        const data = {
-            date1_a: firstPeriod.start,
-            date2_a: firstPeriod.end,
-            date1_b: secondPeriod.start,
-            date2_b: secondPeriod.end,
-            jandexid: project.webpage.jandexid
-        } 
-        PostFetch('/api/jandexdata/search_engine', data)
-            .then(data => {
-                console.log(data)
-                setSearchEngineData(data)
-            })
-    }, [updatePlot])
-
-
-    useEffect(() => {
-        const data = {
-            date1_a: firstPeriod.start,
-            date2_a: firstPeriod.end,
-            date1_b: secondPeriod.start,
-            date2_b: secondPeriod.end,
-            jandexid: project.webpage.jandexid
-        } 
-        PostFetch('/api/jandexdata/social_network', data)
-            .then(data => {
-                console.log(data)
-                setSocialNetworkData(data)
-            })
-    }, [updatePlot])
-
     return (
         <div>
             {/* HEADER */}
-            <div style = {{display: 'flex', justifyContent: 'space-evenly', borderBottom: '1px solid black'}}>
+            <div style = {{display: 'flex', justifyContent: 'space-evenly'}}>
                 <div style = {{width: '25%'}}>Источники</div>
                 <div style = {{width: '20%', marginLeft: '20px'}}>Визиты</div>
                 <div style = {{width: '20%', marginLeft: '20px'}}>Кол-во заказов</div>
@@ -87,74 +63,19 @@ const TrafficTable = ({updatePlot}) => {
                 <div style = {{width: '20%', marginLeft: '20px'}}>Средний чек</div>
             </div>
 
-
-            {/* SEARCH ENGINE */}
-            <div style = {{display: 'flex', justifyContent: 'space-evenly', borderBottom: '1px solid black'}}>
-                <div style = {{width: '25%'}}>Переходы из поисковых систем</div>
-                {searchEngineData && searchEngineData.totals['a'].map((total, index) => {
-                    return (
-                        <div style = {{display: 'flex', marginLeft: '20px',
-                            alignItems: 'center', width: '20%'}}  key = {index}>
-                            <div>{RounderN(total, 1)}</div>
-                            <div style = {{marginLeft: '8px'}}>{CountPercents(total, searchEngineData.totals['b'][index])}</div>
-                        </div>
-                    )
-                })}
-            </div>
-                {searchEngineData && searchEngineData.data.map(entry => {
-                    return(
-                        <div key = {entry.dimensions[0].name} style = {{display: 'flex', justifyContent: 'space-evenly'}}>
-                            <div style = {{width: '25%'}}>{entry.dimensions[0].name}</div>
-                            {entry.metrics['a'].map((value, index) => {
-                                return (
-                                    <div style = {{display: 'flex', marginLeft: '20px',
-                                        alignItems: 'center', width: '20%'}} key = {entry.dimensions[0].name +index}>
-                                        <div>{value ? RounderN(value, 1): 0}</div>
-                                        <div style = {{marginLeft: '8px'}}>{CountPercents(value, entry.metrics['b'][index])}</div>
-                                    </div>
-                                    )
-                            })}
-                        </div>
-                    ) 
-                })}
-
-            {/* SOCIAL NETWORK */}
-
-            <div style = {{display: 'flex', justifyContent: 'space-evenly', borderBottom: '1px solid black'}}> 
-                <div style = {{width: '25%'}}>Переходы из социальных сетей</div>
-                {socialNetworkData && socialNetworkData.totals['a'].map((total, index) => {
-                    return (
-                        <div style = {{display: 'flex', marginLeft: '20px',
-                            alignItems: 'center', width: '20%'}}  key = {index}>
-                            <div>{RounderN(total, 1)}</div>
-                            <div style = {{marginLeft: '8px'}}>{CountPercents(total, socialNetworkData.totals['b'][index])}</div>
-                        </div>
-                    )
-                })}
-            </div>
-                {socialNetworkData && socialNetworkData.data.map(entry => {
-                    return(
-                        <div key = {entry.dimensions[0].name} style = {{display: 'flex', justifyContent: 'space-evenly'}}>
-                            <div style = {{width: '25%'}}>{entry.dimensions[0].name}</div>
-                            {entry.metrics['a'].map((value, index) => {
-                                return (
-                                    <div style = {{display: 'flex', marginLeft: '20px',
-                                        alignItems: 'center', width: '20%'}} key = {entry.dimensions[0].name +index}>
-                                        <div>{value ? RounderN(value, 1): 0}</div>
-                                        <div style = {{marginLeft: '8px'}}>{CountPercents(value, entry.metrics['b'][index])}</div>
-                                    </div>
-                                    )
-                            })}
-                        </div>
-                    ) 
-                })}
-
-            {/* OTHER SOURCES */}
+            <SourceTemplateComponent updatePlot = {updatePlot} CountPercents = {CountPercents}
+                url = {'search_engine'} title = {'Переходы из поисковых систем'}/>
+            <SourceTemplateComponent updatePlot = {updatePlot} CountPercents = {CountPercents}
+                url = {'social_network'} title = {'Переходы из социальных сетей'}/>
+            <SourceTemplateComponent updatePlot = {updatePlot} CountPercents = {CountPercents}
+                url = {'adv_engine'} title = {'Переходы по рекламе'}/>
+            <SourceTemplateComponent updatePlot = {updatePlot} CountPercents = {CountPercents}
+                url = {'referal_source'} title = {'Переходы по ссылкам на сайтах'}/>
             
                 {allSourcesData && allSourcesData.data.map(entry => {
                     return (
                         <div key = {entry.dimensions[0].name} style = {{display: 'flex', justifyContent: 'space-evenly', borderBottom: '1px solid black'}}>
-                            <div style = {{width: '25%'}}>{entry.dimensions[0].name}</div>
+                            <div style = {{width: '25%'}}>{TrafficTitles[entry.dimensions[0].id]}</div>
                             {entry.metrics['a'].map((value, index) => {
                                 return (
                                     <div style = {{display: 'flex', marginLeft: '20px',

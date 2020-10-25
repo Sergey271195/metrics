@@ -229,7 +229,6 @@ def search_engine(request):
         url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
 ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
 &date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>SearchEngineRoot&attribution=last"
-        print(url)
         result = fetch(url)
         logging.warning(f'[Jandexdata Search Engine View] returning requested data')
         return JsonResponse(result, safe = False)
@@ -289,7 +288,69 @@ def traffic_view(request):
         url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
 ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
 &date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>TrafficSource&attribution=last\
-&filters=ym:s:lastTrafficSource=.('direct', 'ad', 'referral', 'internal', 'recommend', 'email')"
+&filters=ym:s:lastTrafficSource=.('direct', 'internal', 'recommend', 'email')"
         result = fetch(url)
         logging.warning(f'[Jandexdata Traffic Source View] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" 
+    Возвращает число визитов, заказов, стоимость купленных товаров, средний чек, лиды 
+    по сайтам, с которых осуществллся переход
+    Аргументы, передаваемые в теле запроса:
+    Два диапазона для сравения
+    - date1_a - дата начала первого периода, за который осуществляется запрос
+    - date2_a - дата конца первого периода, за который осуществляется запрос
+    - date1_b - дата начала второго периода, за который осуществляется запрос
+    - date2_b - дата конца второго периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def referal_source(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Referal Source View] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1_a = request_body.get('date1_a')
+        date2_a = request_body.get('date2_a')
+        date1_b = request_body.get('date1_b')
+        date2_b = request_body.get('date2_b')
+        url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
+ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
+&date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>ReferalSource&attribution=last"
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Referal Source View] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" 
+    Возвращает число визитов, заказов, стоимость купленных товаров, средний чек, лиды 
+    по рекламным ссылкам
+    Аргументы, передаваемые в теле запроса:
+    Два диапазона для сравения
+    - date1_a - дата начала первого периода, за который осуществляется запрос
+    - date2_a - дата конца первого периода, за который осуществляется запрос
+    - date1_b - дата начала второго периода, за который осуществляется запрос
+    - date2_b - дата конца второго периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def  adv_engine(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Ad Source View] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1_a = request_body.get('date1_a')
+        date2_a = request_body.get('date2_a')
+        date1_b = request_body.get('date1_b')
+        date2_b = request_body.get('date2_b')
+        url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
+ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
+&date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>AdvEngine&attribution=last"
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Ad Source View] returning requested data')
         return JsonResponse(result, safe = False)

@@ -6,7 +6,8 @@ from .views import (tokenview, get_employee_view,
                      add_user_to_project_view, get_project_by_id_view,
                      get_project_goals, disable_goal, enable_goal, get_project_goals_all,
                      tasks_general_view, tasks_year_view, all_goals_reaches_view,
-                     visits_view, funnel_view, search_engine, social_network, traffic_view
+                     visits_view, funnel_view, search_engine, social_network, traffic_view,
+                     referal_source, adv_engine
                     )
 
 urlpatterns = [
@@ -49,4 +50,6 @@ urlpatterns = [
     path('jandexdata/search_engine', search_engine),
     path('jandexdata/social_network', social_network),
     path('jandexdata/traffic_view', traffic_view),
+    path('jandexdata/referal_source', referal_source),
+    path('jandexdata/adv_engine', adv_engine),
 ]
