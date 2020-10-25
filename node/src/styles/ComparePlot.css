@@ -1,0 +1,26 @@
+.comapreByMonthTitle {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    color: #1F1F1F;
+    text-transform: uppercase;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.byMonthPlotBtn {
+    font-family: "FuturaPT";
+    width: 30%;
+    padding: 10px;
+    background: #F2F2F2;
+    border-radius: 7px;
+    text-decoration: none;
+    border: none;
+    color: #1F1F1F;
+    outline: none;
+}
+
+.byMonthPlotBtn.active {
+    background: #FFD000;
+    font-weight: 600;
+}

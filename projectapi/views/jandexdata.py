@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.INFO)
 METRIC_TOKEN = os.environ.get('METRIC_TOKEN')
 HEADERS = {"Authorization": f"OAuth {METRIC_TOKEN}"}
 JANDEX_STAT = "https://api-metrika.yandex.net/stat/v1/data?"
+JANDEX_STAT_COMPARE = "https://api-metrika.yandex.net/stat/v1/data/comparison?"
 JANDEX_STAT_BY_TIME = "https://api-metrika.yandex.net/stat/v1/data/bytime?"
 
 """ Вспомогательная функция для thread
@@ -101,7 +102,7 @@ def all_goals_reaches_view(request):
 
 
 
-""" Возвращает общие данные по числу визитов, среднему доходу, доходу с посещения ...
+""" Возвращает общие данные по числу заказов, число товаров в корзине, среднему доходу, доходу с посещения ...
     Аргументы, передаваемые в теле запроса:
     - date1 - дата начала периода, за который осуществляется запрос
     - date2 - дата конца периода, за который осуществляется запрос
@@ -127,7 +128,7 @@ def tasks_general_view(request):
         return JsonResponse(result, safe = False)
 
 
-""" Возвращает общие данные по числу визитов, среднему доходу, доходу с посещения ...
+""" Возвращает общие данные по числу заказов, среднему доходу, доходу с посещения ...
     Аргументы, передаваемые в теле запроса:
     - date1 - дата начала периода, за который осуществляется запрос
     - date2 - дата конца периода, за который осуществляется запрос
@@ -153,3 +154,142 @@ def tasks_year_view(request):
         logging.warning(f'[Threads order by month request] returning requested data')
         return JsonResponse(result, safe = False)
 
+
+
+""" Возвращает число визитов, сгруппированных по источнику трафика для конкретного счетчика (сайта)
+    Аргументы, передаваемые в теле запроса:
+    - date1 - дата начала периода, за который осуществляется запрос
+    - date2 - дата конца периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def visits_view(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Visits view] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1 = request_body.get('date1')
+        date2 = request_body.get('date2')
+        url = f"{JANDEX_STAT}id={jandexid}&metrics=ym:s:visits\
+&date1={date1}&date2={date2}&dimensions=ym:s:<attribution>TrafficSource"
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Visits view] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" Возвращает число визитов, товаров в корзине, заказов, стоимость купленных товаров, доход
+    Аргументы, передаваемые в теле запроса:
+    - date1 - дата начала периода, за который осуществляется запрос
+    - date2 - дата конца периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def funnel_view(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Funnel view] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1 = request_body.get('date1')
+        date2 = request_body.get('date2')
+        url = f"{JANDEX_STAT}id={jandexid}&metrics=ym:s:visits\
+&metrics=ym:s:productBasketsUniq&metrics=ym:s:productBasketsQuantity\
+&metrics=ym:s:ecommercePurchases&metrics=ym:s:productPurchasedPrice\
+&metrics=ym:s:ecommerceRevenue\
+&date1={date1}&date2={date2}&dimensions=ym:s:<attribution>TrafficSource"
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Funnel view] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" Возвращает число визитов, заказов, стоимость купленных товаров, средний чек, лиды по поисковой ситсеме
+    Аргументы, передаваемые в теле запроса:
+    Два диапазона для сравения
+    - date1_a - дата начала первого периода, за который осуществляется запрос
+    - date2_a - дата конца первого периода, за который осуществляется запрос
+    - date1_b - дата начала второго периода, за который осуществляется запрос
+    - date2_b - дата конца второго периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def search_engine(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Search Engine View] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1_a = request_body.get('date1_a')
+        date2_a = request_body.get('date2_a')
+        date1_b = request_body.get('date1_b')
+        date2_b = request_body.get('date2_b')
+        url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
+ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
+&date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>SearchEngineRoot&attribution=last"
+        print(url)
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Search Engine View] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" 
+    Возвращает число визитов, заказов, стоимость купленных товаров, средний чек, лиды по социальной сети
+    Аргументы, передаваемые в теле запроса:
+    Два диапазона для сравения
+    - date1_a - дата начала первого периода, за который осуществляется запрос
+    - date2_a - дата конца первого периода, за который осуществляется запрос
+    - date1_b - дата начала второго периода, за который осуществляется запрос
+    - date2_b - дата конца второго периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def social_network(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Social Network View] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1_a = request_body.get('date1_a')
+        date2_a = request_body.get('date2_a')
+        date1_b = request_body.get('date1_b')
+        date2_b = request_body.get('date2_b')
+        url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
+ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
+&date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>SocialNetwork&attribution=last"
+        print(url)
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Social Network View] returning requested data')
+        return JsonResponse(result, safe = False)
+
+
+""" 
+    Аналогичен funnel_view но за два периода
+    Возвращает число визитов, товаров в корзине, заказов, стоимость купленных товаров, доход и средний чек 
+    Аргументы, передаваемые в теле запроса:
+    - date1 - дата начала периода, за который осуществляется запрос
+    - date2 - дата конца периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+"""
+
+@csrf_exempt
+def traffic_view(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Jandexdata Traffic Source View] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1_a = request_body.get('date1_a')
+        date2_a = request_body.get('date2_a')
+        date1_b = request_body.get('date1_b')
+        date2_b = request_body.get('date2_b')
+        url = f"{JANDEX_STAT_COMPARE}id={jandexid}&metrics=ym:s:visits,\
+ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurchase&date1_a={date1_a}&date2_a={date2_a}&\
+&date1_b={date1_b}&date2_b={date2_b}&dimensions=ym:s:<attribution>TrafficSource&attribution=last\
+&filters=ym:s:lastTrafficSource=.('direct', 'ad', 'referral', 'internal', 'recommend', 'email')"
+        result = fetch(url)
+        logging.warning(f'[Jandexdata Traffic Source View] returning requested data')
+        return JsonResponse(result, safe = False)

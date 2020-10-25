@@ -1,0 +1,28 @@
+.mainLogo {
+    color: #FDD835;
+    font-weight: bolder;
+    font-size: 25px;
+    line-height: 32px;
+    text-transform: uppercase;
+    margin-left: 150px;
+}
+
+.navbar {
+    background: #1F1F1F;
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+
+.navbarLink {
+    margin-left: 60px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 26px;
+    color: #FFFFFF;
+    text-decoration: none;
+}

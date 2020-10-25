@@ -2,24 +2,24 @@ import React, {useEffect, useContext} from 'react'
 import {
     HashRouter as Router,
     Switch,
-    Route,
-    Link
+    Route
   } from "react-router-dom";
 
-import { TokenContext } from '../context/TokenContext'
 import { GETFetch } from './Utils'
 import MainView from './views/MainView'
 import ProjectView from './views/ProjectView'
 import EmployeeView from './views/EmployeeView'
 import { EmployeeContext } from '../context/EmployeeContext';
 import ProjectListView from './views/ProjectListView';
+import NavbarComponent from './navbar/NavbarComponent';
+import '../styles/Main.css'
+import { StaticContext } from '../context/StaticContext';
 
 
 
 const Controller = () => {
 
-    const { setToken } = useContext(TokenContext)
-    const {loading, data, error} = GETFetch('api/token')
+    const { setStaticpath } = useContext(StaticContext)
     const { dispatchEmployee } = useContext(EmployeeContext) 
     
     useEffect(() => {
@@ -30,26 +30,14 @@ const Controller = () => {
     }, [])
 
     useEffect(() => {
-        if (data) {
-            setToken(data.token)
-        }
-    }, [data])
+        const app = document.getElementById("app")
+        const staticpath = app.getAttribute('data-staticpath')
+        setStaticpath(staticpath)
+    }, [])
 
-    if (error) return <div>Ooops. Something went wrong...</div>
-    if (loading) return <div>Loading</div>
     return(
         <Router>
-
-            <nav style = {{display:'flex', backgroundColor: 'grey', width: '100%', marginBottom: '20px',
-                height: '50px', padding: '5px', alignItems: 'center', justifyContent: 'space-evenly'}}>
-                <h1>Metrics</h1>
-                <Link to = "/">
-                    <button>Главная</button>
-                </Link>
-                <Link to = "/employee"><button>Сотрудники</button></Link>
-                <Link to = "/project"><button>Проекты</button></Link>
-            </nav>
-
+            <NavbarComponent />
             <div style = {{display: 'flex', width: '100%'}}>
                 <Switch>
                     <Route path = "/project/:id" children={<ProjectView />} />

@@ -66,7 +66,7 @@ const OrderPlotCompareContainer = ({updatePlot}) => {
     }, [traffic, dataSecondPart])
 
     useEffect(() => {
-
+        if (!project.webpage) return
         PostFetch('api/jandexdata/tasks/general', {
             date1: firstPeriod.start,
             date2: firstPeriod.end,
@@ -82,11 +82,10 @@ const OrderPlotCompareContainer = ({updatePlot}) => {
         })
             .then(data => setDataSecondPart(data))
 
-    }, [updatePlot, project.webpage.jandexid])
+    }, [updatePlot, project.webpage])
 
     return (
         <div>
-            <h1>Заказы</h1>
             <div style = {{display: 'flex'}}>
                 <OrderPlotComponent currentFilteredData = {currentFilteredData} />
                 <TrafficSourceCheckboxComponent traffic = {traffic} setTraffic = {setTraffic}/>

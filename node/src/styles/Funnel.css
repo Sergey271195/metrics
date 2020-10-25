@@ -1,0 +1,163 @@
+.funnelTitle {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    text-transform: uppercase;
+    color: #1F1F1F;
+    margin-bottom: 20px;
+}
+
+.funnelTrafficElementContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 0.3px solid #A9A9A9;
+    width: 12.5%;
+    padding: 5px;
+}
+
+.funnelTrafficSource {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    text-align: center;
+    color: #1F1F1F;
+    overflow-wrap: break-word;
+}
+
+.funnelTrafficElementContainer:first-of-type {
+    border-left: none;
+}
+
+.funnelMetrics {
+    font-weight: 600;
+    font-size: 16px;
+    color: #1F1F1F;
+}
+
+.funnelPercent {
+    font-weight: 600;
+    font-size: 14px;
+    color: #FF8C00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.funnelRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 80px;
+    margin: -10px;
+}
+
+.funnelRowTitle {
+    text-align: center;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000000;
+}
+
+.funnelRowValue {
+    text-align: center;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000000;
+    margin-right: 20px;
+}
+
+.funnelRowPercent {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    align-self: center;
+    z-index: 1;
+    background: #FFFFFF;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: normal;
+    font-size: 10px;
+    color: #1F1F1F;
+}
+
+.funnelRevenue {
+    font-weight: 600;
+    font-size: 18px;
+    color: #1F1F1F;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    align-self: center;
+}
+
+.rightMenuTitle {
+    margin: 20px;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 26px;
+    color: #313131;
+    width: 90%;
+    border-bottom: 0.5px solid #A9A9A9;
+    padding-bottom: 8px;
+}
+
+.rightMenuValue {
+    font-style: normal;
+    font-weight: 450;
+    font-size: 30px;
+    color: #1F1F1F;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.rightMenuPercentsUp {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    color: #169D00;
+}
+
+.rightMenuPercentsDown {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    color: #F82626;
+}
+
+.funnelRowsPercentsUp {
+    font-style: normal;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    color: #169D00;
+}
+
+.funnelRowsPercentsDown {
+    font-style: normal;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    color: #F82626;
+}
+
+.funnelRowContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 130%;
+    align-items: flex-end; 
+
+}

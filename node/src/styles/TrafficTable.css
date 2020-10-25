@@ -1,0 +1,19 @@
+.trafficTablePercentsUp {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    color: #F82626;
+    margin-left: 5px
+}
+
+.trafficTablePercentsDown {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    color: #169D00;
+    margin-left: 5px
+}

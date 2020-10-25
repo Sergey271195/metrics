@@ -1,11 +1,12 @@
 from django.urls import path
 from .views import (tokenview, get_employee_view,
                      create_employee_view, delete_employee_view,
-                     refreshwebpages, getwebpages,
+                     refreshwebpages, getwebpages, 
                      create_project_view, get_project_view, delete_project_view,
                      add_user_to_project_view, get_project_by_id_view,
                      get_project_goals, disable_goal, enable_goal, get_project_goals_all,
-                     tasks_general_view, tasks_year_view, all_goals_reaches_view
+                     tasks_general_view, tasks_year_view, all_goals_reaches_view,
+                     visits_view, funnel_view, search_engine, social_network, traffic_view
                     )
 
 urlpatterns = [
@@ -41,4 +42,11 @@ urlpatterns = [
     path('jandexdata/tasks/general', tasks_general_view),
     path('jandexdata/tasks/year', tasks_year_view),
     path('jandexdata/tasks/day', tasks_year_view),
+    
+    path('jandexdata/views', visits_view),
+    path('jandexdata/funnel', funnel_view),
+
+    path('jandexdata/search_engine', search_engine),
+    path('jandexdata/social_network', social_network),
+    path('jandexdata/traffic_view', traffic_view),
 ]

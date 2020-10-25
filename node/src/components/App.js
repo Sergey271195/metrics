@@ -8,11 +8,12 @@ import EmployeeContextProvider from '../context/EmployeeContext';
 import ProjectsContextProvider from '../context/ProjectsContext'
 import ViewsContextProvider from '../context/ViewsContext';
 import DataForPlotsContextProvider from '../context/DataForPlotsContext';
+import StaticContextProvider from '../context/StaticContext';
 
 
 const App = () => {
     return(
-        <TokenContextProvider>
+        <StaticContextProvider>
             <WebListContextProvider>
                 <CurrentWebPageContextProvider>
                     <EmployeeContextProvider>
@@ -26,7 +27,7 @@ const App = () => {
                     </EmployeeContextProvider>
                 </CurrentWebPageContextProvider>
             </WebListContextProvider>
-        </TokenContextProvider>
+        </StaticContextProvider>
     )
 }
 

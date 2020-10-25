@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
 import { TrafficSources } from '../../PlotUtils'
+import { BsCircle, BsCheckCircle } from 'react-icons/bs'
+import BoxComponent from '../../utilcomponents/BoxComponent'
 
-const CheckComponent = ({source, traffic, setTraffic}) => {
+import '../../../styles/TrafficSource.css'
 
-    const [ x, setX ] = useState(true)
+const CheckComponent = ({source, traffic, setTraffic, index}) => {
 
-    const onCheck = (event) => {
+    const onCheck = () => {
         setTraffic(traffic.map(item => {
-            return item.id === source.id ? {...item, show: event.target.checked} : item
+            return item.id === source.id ? {...item, show: !item.show} : item
         }))
-        setX(event.target.checked)
     }
 
 
     return (
-        <div>
-            <input type = 'checkbox' checked = {x} value = {source.id} onChange = {(event) => onCheck(event)} />
-            <label>{source.name}</label>
+        <div style = {{display: 'flex', alignItems: 'center', marginBottom: '5px'}}>
+            {traffic[index].show 
+            ? <BsCheckCircle color = '#169D00' size = '13px' onClick = {() => onCheck()}/>
+            : <BsCircle color = '#169D00' size = '13px' onClick = {() => onCheck()}/>}
+            <label style = {{marginLeft: '8px'}}>{source.label}</label>
         </div>
     )
 
@@ -26,14 +29,16 @@ const TrafficSourceCheckboxComponent = ({ traffic, setTraffic }) => {
 
     if (!traffic) return <></>
     return (
-        <div style = {{display: 'flex', flexDirection: 'column'}}>
-            <h3  style = {{margin:'10px'}}>Источники трафика</h3>
-                {TrafficSources.map(source => {
+        <BoxComponent size = {{width: '20%', marginLeft: '20px', padding: '30px',
+            flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'flex-start'}}>
+            <div className = 'trafficSourceTitle'>Источники трафика</div>
+                {TrafficSources.map((source, index) => {
                     return (
-                    <CheckComponent key = {source.id} source = {source} traffic = {traffic} setTraffic = {setTraffic}/>
+                    <CheckComponent key = {source.id} source = {source} 
+                        traffic = {traffic} setTraffic = {setTraffic} index = {index}/>
                     )
                 })}
-        </div>
+        </BoxComponent>
     )
 }
 

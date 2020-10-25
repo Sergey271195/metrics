@@ -24,6 +24,8 @@ class WebPageSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only = True)
     jandexid = serializers.IntegerField()
     name = serializers.CharField()
+    url = serializers.CharField()
+    create_time= serializers.DateTimeField()
 
 class ProjectSerializer(serializers.Serializer):
 

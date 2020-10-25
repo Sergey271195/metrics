@@ -4,20 +4,26 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Template project</title>
-    <meta name="description" content="Template project">
+    <title>Metrics project</title>
+    <meta name="description" content="Metrics project">
     <meta name="author" content="SAM">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
 
 </head>
 
 <style>
-
+    @font-face {
+      font-family: "FuturaPT";
+      src: url("{% static 'FuturaPT-Book.ttf' %}");
+    }
+    body {
+      font-family: "FuturaPT";
+    }
 </style>
 
 <body>
 
-    <div id = "app">
+    <div id = "app" data-staticpath = "{% static '' %}">
         <!-- React goes here -->
     </div>
 </body>

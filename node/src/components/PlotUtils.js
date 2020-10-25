@@ -41,44 +41,96 @@ export const TrafficSources = [
     {
         id: 'organic',
         name: 'Search engine traffic',
+        label: 'Поисковый трафик',
         show: true
     },
     {
         id: 'ad',
         name: 'Add traffic',
+        label: 'Рекламный трафик',
         show: true
     },
     {
         id: 'direct',
         name: 'Direct traffic',
+        label: 'Прямой трафик',
         show: true
     },
     {
         id: 'referral',
         name: 'Link traffic',
+        label: 'По ссылке',
         show: true
     },
     {
         id: 'social',
         name: 'Soical network traffic',
+        label: 'Социальные сети',
         show: true
     },
     {
         id: 'internal',
         name: 'Internal traffic',
+        label: 'Внутренний трафик',
         show: true
     },
     {
         id: 'recommend',
         name: 'Recommendation system traffic',
+        label: 'Рек. система трафика',
         show: true
     },
     {
         id: 'email',
         name: 'Mailing traffic',
+        label: 'Почтовый трафик',
         show: true
     }
 ]
+
+export const TrafficSourcesDict = 
+    {
+        'organic': {
+            name: 'Search engine traffic',
+            label: 'Поисковый трафик',
+            show: true
+        },
+        'ad': {
+            name: 'Add traffic',
+            label: 'Рекламный трафик',
+            show: true
+        },
+        'direct': {
+            name: 'Direct traffic',
+            label: 'Прямой трафик',
+            show: true
+        },
+        'referral': {
+            name: 'Link traffic',
+            label: 'По ссылке',
+            show: true
+        },
+        'social': {
+            name: 'Soical network traffic',
+            label: 'Социальные сети',
+            show: true
+        },
+        'internal': {
+            name: 'Internal traffic',
+            label: 'Внутренний трафик',
+            show: true
+        },
+        'recommend': {
+            name: 'Recommendation system traffic',
+            label: 'Рекомендат. система',
+            show: true
+        },
+        'email': {
+            name: 'Mailing traffic',
+            label: 'Почтовый трафик',
+            show: true
+        }
+    }
 
 export const trafficReducer = (traffic) => {
     return traffic.filter(source => source.show).reduce((arr, source) => {

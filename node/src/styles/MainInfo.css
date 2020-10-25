@@ -1,0 +1,35 @@
+.webLogo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    filter: drop-shadow(0px 4px 25px rgba(0, 0, 0, 0.1));
+    background: #FDD835;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.webTitle {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 45px; 
+    color: #1F1F1F;
+}
+
+.webpageType {
+    text-transform: lowercase;
+    font-size: 18px;
+    color: #1F1F1F;
+}
+
+.webpageLink {
+    font-size: 18px;
+    text-decoration: underline;
+    color: #1F1F1F;
+}
+
+.effPercent {
+    font-weight: 450;
+    font-size: 50px;
+    color: #1F1F1F;
+}
