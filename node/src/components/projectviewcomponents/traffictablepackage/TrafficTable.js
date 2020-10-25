@@ -7,6 +7,7 @@ import '../../../styles/TrafficTable.css'
 import SourceTemplateComponent from './SourceTemplateComponent'
 import { CountPercents } from './CounterComponent'
 import { trafficTableReducer } from '../../PlotUtils'
+import BoxComponent from '../../utilcomponents/BoxComponent'
 
 const TrafficTitles = {
     'direct': 'Прямые заходы',
@@ -62,7 +63,7 @@ const TrafficTable = ({updatePlot}) => {
     console.log(allSourcesGoalsData)
 
     return (
-        <div>
+        <BoxComponent>
             {/* HEADER */}
             <div style = {{display: 'flex', justifyContent: 'space-evenly'}}>
                 <div style = {{width: '25%'}}>Источники</div>
@@ -112,7 +113,7 @@ const TrafficTable = ({updatePlot}) => {
                         </div>
                     )
                 })}
-        </div>
+        </BoxComponent>
     )
 }
 
