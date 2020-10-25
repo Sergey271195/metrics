@@ -234,3 +234,26 @@ export const allDataRedcuerLight = (data, sources) => {
                 })
             }, [])
 }
+
+export const trafficTableReducer = (data) => {
+    return data.reduce((acc, entry) => {
+        entry.data.map(en => {
+            const sum_a = en.metrics['a'].reduce((acc, value) => {
+                return value + acc
+            }, 0)
+            const sum_b = en.metrics['b'].reduce((acc, value) => {
+                return value + acc
+            }, 0)
+            if (!acc[en.dimensions[0].name]) {
+                acc = {...acc, [en.dimensions[0].name]: {'a': sum_a, 'b': sum_b}}
+            }   else {
+                acc[en.dimensions[0].name]['a'] += sum_a
+                acc[en.dimensions[0].name]['b'] += sum_b
+            }
+            acc['totals']['a'] += sum_a
+            acc['totals']['b'] += sum_b
+        })
+        return acc
+    }, {'totals': {'a': 0, 'b': 0}})
+
+}

@@ -341,6 +341,7 @@ ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurch
 def  adv_engine(request):
 
     if request.method == 'POST':
+    
         logging.warning(f'[Jandexdata Ad Source View] POST')
         request_body = json.loads(request.body)
         jandexid = int(request_body.get('jandexid'))
@@ -354,3 +355,63 @@ ym:s:ecommercePurchases,ym:s:productPurchasedPrice,ym:s:ecommerceRevenuePerPurch
         result = fetch(url)
         logging.warning(f'[Jandexdata Ad Source View] returning requested data')
         return JsonResponse(result, safe = False)
+
+
+""" Возвращает данные по числу завершения целей в формате JSON с группировкой по поисковым системам
+    Аргументы, передаваемые в теле запроса:
+    - date1_a - дата начала первого периода, за который осуществляется запрос
+    - date2_a - дата конца первого периода, за который осуществляется запрос
+    - date1_b - дата начала второго периода, за который осуществляется запрос
+    - date2_b - дата конца второго периода, за который осуществляется запрос
+    - jandexid - id проекта в Яндекс Метрике
+    Используетя модуль threading
+"""
+
+@csrf_exempt
+def goals_search_engine(request):
+
+    if request.method == 'POST':
+        logging.warning(f'[Threads Goals Search Engine View request] POST')
+        request_body = json.loads(request.body)
+        jandexid = int(request_body.get('jandexid'))
+        date1_a = request_body.get('date1_a')
+        date2_a = request_body.get('date2_a')
+        date1_b = request_body.get('date1_b')
+        date2_b = request_body.get('date2_b')
+
+        ## Если требются данные по всем целям сразу
+        max_number = 4
+        goals_ids = [('ym:s:goal'+str(goal.jandexid)+ 'reaches') for goal in 
+            Goal.objects.filter(project__jandexid = jandexid).filter(active = True)]
+        goals_splitted = array_split(goals_ids, max_number)
+        goals_strings = [','.join(goals_id) for goals_id in goals_splitted]
+
+        jandex_path = JANDEX_STAT
+        dimensions = ''
+
+        ## В случае запроса по всем целям
+        ## Возвращается число выполнений каждой цели
+        ## в зависимости от периода времени и источника трафика
+        ## max_number определяет максимальное число метрик в запросе (согласно Яндекс Метрики - 20)
+        if request.path == '/api/jandexdata/search_engine/goals':
+            dimensions = 'ym:s:<attribution>SearchEngineRoot'
+        
+        elif request.path == '/api/jandexdata/social_network/goals':
+            dimensions = 'ym:s:<attribution>SocialNetwork'
+        
+        elif request.path == '/api/jandexdata/traffic_view/goals':
+            dimensions = "ym:s:<attribution>TrafficSource&attribution=last\
+&filters=ym:s:lastTrafficSource=.('direct', 'internal', 'recommend', 'email')"
+        
+        elif request.path == '/api/jandexdata/referal_source/goals':
+            dimensions = 'ym:s:<attribution>ReferalSource'
+
+        elif request.path == '/api/jandexdata/adv_engine/goals':
+            dimensions = 'ym:s:<attribution>AdvEngine'
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            urls = [(f"{JANDEX_STAT_COMPARE}ids={jandexid}&metrics={goals_string}&date1_a={date1_a}&date2_a={date2_a}\
+&date1_b={date1_b}&date2_b={date2_b}&dimensions={dimensions}") for goals_string in goals_strings]
+            result = list(executor.map(fetch, urls))
+            logging.warning(f'[Threads Goals Search Engine View request] returning requested data')
+            return JsonResponse(result, safe = False)

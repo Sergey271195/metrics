@@ -66,11 +66,11 @@ const ProjectView = () => {
             <div style = {{display: 'flex', flexDirection: 'column', width: '80%'}}>
                 <MainInfoComponent />
                 <FilterRequestsComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot} />
-                <FunnelComponent updatePlot = {updatePlot}/>
+                {/* <FunnelComponent updatePlot = {updatePlot}/> */}
                 <TrafficTable updatePlot = {updatePlot}/>
                 <Switch>
                     <Route exact path = {path}>
-                        <OrderComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot}/>
+                        {/* <OrderComponent updatePlot = {updatePlot} setUpdatePlot = {setUpdatePlot}/> */}
                     </Route>
                     <Route path = {`${path}/leads`}>
                         <LeadsComponent updatePlot = {updatePlot} goals = {goals} setGoals = {setGoals}/>

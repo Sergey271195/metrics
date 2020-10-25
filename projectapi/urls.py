@@ -7,7 +7,7 @@ from .views import (tokenview, get_employee_view,
                      get_project_goals, disable_goal, enable_goal, get_project_goals_all,
                      tasks_general_view, tasks_year_view, all_goals_reaches_view,
                      visits_view, funnel_view, search_engine, social_network, traffic_view,
-                     referal_source, adv_engine
+                     referal_source, adv_engine, goals_search_engine
                     )
 
 urlpatterns = [
@@ -48,8 +48,17 @@ urlpatterns = [
     path('jandexdata/funnel', funnel_view),
 
     path('jandexdata/search_engine', search_engine),
+    path('jandexdata/search_engine/goals', goals_search_engine),
+
     path('jandexdata/social_network', social_network),
+    path('jandexdata/social_network/goals', goals_search_engine),
+
     path('jandexdata/traffic_view', traffic_view),
+    path('jandexdata/traffic_view/goals', goals_search_engine),
+
     path('jandexdata/referal_source', referal_source),
+    path('jandexdata/referal_source/goals', goals_search_engine),
+
     path('jandexdata/adv_engine', adv_engine),
+    path('jandexdata/adv_engine/goals', goals_search_engine),
 ]
